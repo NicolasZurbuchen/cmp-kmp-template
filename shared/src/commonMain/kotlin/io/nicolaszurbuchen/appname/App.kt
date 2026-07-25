@@ -16,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import appname.shared.generated.resources.Res
 import appname.shared.generated.resources.compose_multiplatform
+import io.nicolaszurbuchen.appname.app.design.theme.AppNameTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-@Preview
-private fun AppPreview() {
-    MaterialTheme {
+fun App() {
+    AppNameTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier =

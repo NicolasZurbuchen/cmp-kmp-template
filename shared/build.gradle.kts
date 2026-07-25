@@ -83,6 +83,8 @@ kotlin {
             implementation(libs.mvikotlin)
             implementation(libs.mvikotlin.main)
             implementation(libs.mvikotlin.extensions.coroutines)
+            implementation(libs.navigation3.ui)
+            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

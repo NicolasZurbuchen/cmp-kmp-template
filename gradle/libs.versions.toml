@@ -7,12 +7,13 @@ androidx-activity = "1.13.0"
 androidx-lifecycle = "2.11.0"
 composeMultiplatform = "1.11.1"
 compose-rules = "0.6.3"
+koin = "4.2.2"
 konsist = "0.17.3"
 kotlin = "2.4.10"
 material3 = "1.9.0"
 ktlint-engine = "1.8.0"
 ktlint-gradle = "14.2.0"
-koin = "4.2.2"
+mvikotlin = "4.4.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -26,12 +27,15 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
-konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
-ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version.ref = "compose-rules" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version.ref = "compose-rules" }
+mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
+mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
+mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -1,7 +1,7 @@
 package io.nicolaszurbuchen.appname.app.di
 
-import org.koin.dsl.module
+import io.nicolaszurbuchen.appname.infra.mvi.storeModule
 
-val appModule = module {
-    // Shared modules will be added here
-}
+val appModule = listOf(
+    storeModule
+)

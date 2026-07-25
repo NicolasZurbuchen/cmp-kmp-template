@@ -75,6 +75,9 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.core)
+            implementation(libs.mvikotlin)
+            implementation(libs.mvikotlin.main)
+            implementation(libs.mvikotlin.extensions.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

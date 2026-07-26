@@ -250,6 +250,28 @@ class NumberGeneratorRepositoryImplTest {
         }
 
     @Test
+    fun `syncPending leaves a row unsynced when its fact fetch returns null`() =
+        runTest {
+            val local =
+                FakeGeneratedNumberLocalDataSource().apply {
+                    rows.add(GeneratedNumberEntity(1L, 42L, null, 100L, 0L, 0L))
+                }
+            val repository =
+                NumberGeneratorRepositoryImpl(
+                    randomNumberRemoteDataSource = FakeRandomNumberRemoteDataSource(result = 1),
+                    numberFactRemoteDataSource = FakeNumberFactRemoteDataSource(result = null),
+                    localDataSource = local,
+                    connectivityChecker = FakeConnectivityChecker(connected = true),
+                )
+
+            repository.syncPending()
+
+            assertTrue(local.updateFactCalls.isEmpty())
+            assertEquals(null, local.rows.single().fact)
+            assertEquals(0L, local.rows.single().is_synced)
+        }
+
+    @Test
     fun `syncPending does not throw when a row's fact fetch fails`() =
         runTest {
             val local =

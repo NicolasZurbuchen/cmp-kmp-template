@@ -8,6 +8,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import platform.CoreFoundation.CFRelease
 import platform.SystemConfiguration.SCNetworkReachabilityCreateWithName
 import platform.SystemConfiguration.SCNetworkReachabilityFlagsVar
 import platform.SystemConfiguration.SCNetworkReachabilityGetFlags
@@ -18,9 +19,13 @@ private class IosConnectivityChecker : ConnectivityChecker {
     override fun isConnected(): Boolean =
         memScoped {
             val reachability = SCNetworkReachabilityCreateWithName(null, "www.random.org") ?: return false
-            val flags = alloc<SCNetworkReachabilityFlagsVar>()
-            val success = SCNetworkReachabilityGetFlags(reachability, flags.ptr)
-            success && (flags.value and kSCNetworkReachabilityFlagsReachable) != 0u
+            try {
+                val flags = alloc<SCNetworkReachabilityFlagsVar>()
+                val success = SCNetworkReachabilityGetFlags(reachability, flags.ptr)
+                success && (flags.value and kSCNetworkReachabilityFlagsReachable) != 0u
+            } finally {
+                CFRelease(reachability)
+            }
         }
 }
 

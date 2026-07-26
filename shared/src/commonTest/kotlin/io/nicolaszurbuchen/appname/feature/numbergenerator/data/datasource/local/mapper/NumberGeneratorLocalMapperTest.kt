@@ -47,4 +47,22 @@ class NumberGeneratorLocalMapperTest {
         assertFalse(domain.isFavorite)
         assertFalse(domain.isSynced)
     }
+
+    @Test
+    fun `toDomain maps a favorited but not yet synced row`() {
+        val entity =
+            GeneratedNumberEntity(
+                id = 3L,
+                value_ = 13L,
+                fact = "13 is considered unlucky in some cultures",
+                created_at = 1_700_000_002_000L,
+                is_favorite = 1L,
+                is_synced = 0L,
+            )
+
+        val domain = entity.toDomain()
+
+        assertTrue(domain.isFavorite)
+        assertFalse(domain.isSynced)
+    }
 }

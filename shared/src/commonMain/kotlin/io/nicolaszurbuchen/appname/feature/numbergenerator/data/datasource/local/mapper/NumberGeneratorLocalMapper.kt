@@ -6,6 +6,7 @@ import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.model.Generate
 fun GeneratedNumberEntity.toDomain(): GeneratedNumber =
     GeneratedNumber(
         id = id,
+        // SQLDelight escapes the `value` column to `value_` because `value` is a Kotlin soft keyword.
         value = value_.toInt(),
         fact = fact,
         createdAt = created_at,

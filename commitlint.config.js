@@ -33,6 +33,7 @@ module.exports = {
         'deps',
         'feature-a',
         'feature-b',
+        'number-generator',
       ],
     ],
     'scope-empty': [0],

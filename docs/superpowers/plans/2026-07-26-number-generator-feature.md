@@ -334,7 +334,7 @@ git commit -m "feat(number-generator): add use cases with fake-repository tests"
 - Create: `shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/datasource/local/mapper/NumberGeneratorLocalMapper.kt`
 - Test: `shared/src/commonTest/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/datasource/local/mapper/NumberGeneratorLocalMapperTest.kt`
 
-SQLDelight generates `GeneratedNumberEntity` (the row type) and `GeneratedNumberQueries` (the queries type, named after the `.sq` file) into the configured package `io.nicolaszurbuchen.appname.cache` (see `sqldelight { databases { create("AppDatabase") { packageName.set("io.nicolaszurbuchen.appname.cache") } } }` in `shared/build.gradle.kts` — already there, not being changed). Column names are kept verbatim as Kotlin property names (snake_case in, snake_case out — confirmed against this repo's existing `Number.sq`/`NumberEntity` and PopKnow's `QuestionHistoryEntity`, neither auto-camelCases).
+SQLDelight generates `GeneratedNumberEntity` (the row type) and `GeneratedNumberQueries` (the queries type, named after the `.sq` file) into the package matching the `.sq` file's own directory — `io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local` — NOT the `io.nicolaszurbuchen.appname.cache` package (that package, set via `sqldelight { databases { create("AppDatabase") { packageName.set(...) } } }` in `shared/build.gradle.kts`, governs only the top-level `AppDatabase` class itself). Column names are kept verbatim as Kotlin property names (snake_case in, snake_case out), **except** the `value` column, which SQLDelight escapes to the Kotlin property `value_` because `value` collides with a Kotlin soft keyword — confirmed against the actual generated `GeneratedNumberEntity.kt` under `shared/build/generated/sqldelight/...` after running the generation task in Task 3.
 
 - [ ] **Step 1: Create the SQLDelight schema**
 
@@ -382,7 +382,7 @@ Expected: BUILD SUCCESSFUL (generates `GeneratedNumberEntity` and `GeneratedNumb
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper
 
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberEntity
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberEntity
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -394,7 +394,7 @@ class NumberGeneratorLocalMapperTest {
         val entity =
             GeneratedNumberEntity(
                 id = 1L,
-                value = 42L,
+                value_ = 42L,
                 fact = "42 is the answer",
                 created_at = 1_700_000_000_000L,
                 is_favorite = 1L,
@@ -416,7 +416,7 @@ class NumberGeneratorLocalMapperTest {
         val entity =
             GeneratedNumberEntity(
                 id = 2L,
-                value = 7L,
+                value_ = 7L,
                 fact = null,
                 created_at = 1_700_000_001_000L,
                 is_favorite = 0L,
@@ -442,19 +442,21 @@ Expected: FAIL to compile — `toDomain` is unresolved.
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper
 
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberEntity
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberEntity
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.model.GeneratedNumber
 
 fun GeneratedNumberEntity.toDomain(): GeneratedNumber =
     GeneratedNumber(
         id = id,
-        value = value.toInt(),
+        value = value_.toInt(),
         fact = fact,
         createdAt = created_at,
         isFavorite = is_favorite == 1L,
         isSynced = is_synced == 1L,
     )
 ```
+
+(Note: SQLDelight generates `GeneratedNumberEntity`/`GeneratedNumberQueries` in the package matching the `.sq` file's own directory — `io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local` — not in `io.nicolaszurbuchen.appname.cache`, which only holds the top-level `AppDatabase` class. The `value` column is also escaped to the Kotlin property `value_`, since `value` is a Kotlin soft keyword. Both corrections verified against the actual generated code.)
 
 - [ ] **Step 6: Run test to verify it passes**
 
@@ -483,7 +485,6 @@ Thin wrapper around generated queries — matches this repo's existing `QuizLoca
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local
 
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberEntity
 import kotlinx.coroutines.flow.Flow
 
 interface GeneratedNumberLocalDataSource {
@@ -520,8 +521,6 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.loca
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberEntity
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberQueries
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 
@@ -536,7 +535,7 @@ class GeneratedNumberLocalDataSourceImpl(
     ): Long =
         queries.transactionWithResult {
             queries.insertGeneratedNumber(
-                value = value.toLong(),
+                value_ = value.toLong(),
                 fact = fact,
                 created_at = createdAt,
                 is_favorite = 0L,
@@ -1012,10 +1011,10 @@ This is the most important test in the feature: it proves the online/offline/fac
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository
 
-import io.nicolaszurbuchen.appname.cache.GeneratedNumberEntity
 import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberEntity
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberLocalDataSource
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.NumberFactRemoteDataSource
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.RandomNumberRemoteDataSource
@@ -1274,7 +1273,7 @@ class NumberGeneratorRepositoryImpl(
     override suspend fun syncPending() {
         localDataSource.getUnsynced().forEach { row ->
             try {
-                val fact = numberFactRemoteDataSource.fetchFact(row.value.toInt())
+                val fact = numberFactRemoteDataSource.fetchFact(row.value_.toInt())
                 if (fact != null) {
                     localDataSource.updateFact(row.id, fact, isSynced = true)
                 }

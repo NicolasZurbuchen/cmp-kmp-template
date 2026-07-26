@@ -1,0 +1,31 @@
+CREATE TABLE GeneratedNumberEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    value INTEGER NOT NULL,
+    fact TEXT,
+    created_at INTEGER NOT NULL,
+    is_favorite INTEGER NOT NULL DEFAULT 0,
+    is_synced INTEGER NOT NULL DEFAULT 0
+);
+
+insertGeneratedNumber:
+INSERT INTO GeneratedNumberEntity(value, fact, created_at, is_favorite, is_synced)
+VALUES (?, ?, ?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+selectAllOrderByCreatedAtDesc:
+SELECT * FROM GeneratedNumberEntity
+ORDER BY created_at DESC;
+
+selectById:
+SELECT * FROM GeneratedNumberEntity WHERE id = ?;
+
+updateFavorite:
+UPDATE GeneratedNumberEntity SET is_favorite = ? WHERE id = ?;
+
+updateFact:
+UPDATE GeneratedNumberEntity SET fact = ?, is_synced = ? WHERE id = ?;
+
+selectUnsynced:
+SELECT * FROM GeneratedNumberEntity WHERE is_synced = 0;

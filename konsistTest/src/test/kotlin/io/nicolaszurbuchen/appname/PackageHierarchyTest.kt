@@ -47,7 +47,7 @@ class PackageHierarchyTest {
 
     @Test // ok
     fun `Direct children of data must be in allowed list`() {
-        val allowed = listOf("repository", "datasource", "platform")
+        val allowed = listOf("repository", "datasource")
 
         scope.packages
             .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.[^.]+$")) }

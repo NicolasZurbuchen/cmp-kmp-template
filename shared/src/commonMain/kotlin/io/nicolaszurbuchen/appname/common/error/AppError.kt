@@ -22,29 +22,11 @@ sealed interface AppError {
         ) : Database
     }
 
-    sealed interface Trivia : AppError {
-        data object NoResults : Trivia
-
-        data object InvalidParameter : Trivia
-
-        data object RateLimit : Trivia
-    }
-
-    sealed interface NumberGenerator : AppError {
-        data object NumberFetchFailed : NumberGenerator
-
-        data object FactFetchFailed : NumberGenerator
+    sealed interface PokemonExplorer : AppError {
+        data object FetchFailed : PokemonExplorer
     }
 
     data class Unexpected(
         val cause: Throwable,
     ) : AppError
 }
-
-fun Int.toAppError(): AppError =
-    when (this) {
-        1 -> AppError.Trivia.NoResults
-        2 -> AppError.Trivia.InvalidParameter
-        5 -> AppError.Trivia.RateLimit
-        else -> AppError.Network.Http(this)
-    }

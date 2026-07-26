@@ -33,7 +33,7 @@ module.exports = {
         'deps',
         'feature-a',
         'feature-b',
-        'number-generator',
+        'pokemon-explorer',
       ],
     ],
     'scope-empty': [0],

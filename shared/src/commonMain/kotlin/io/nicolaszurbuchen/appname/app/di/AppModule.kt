@@ -1,6 +1,8 @@
 package io.nicolaszurbuchen.appname.app.di
 
 import io.nicolaszurbuchen.appname.app.navigation.appNavigationModule
+import io.nicolaszurbuchen.appname.feature.numbergenerator.di.numberGeneratorModule
+import io.nicolaszurbuchen.appname.feature.numbergenerator.di.numberGeneratorPlatformModule
 import io.nicolaszurbuchen.appname.infra.database.databaseModule
 import io.nicolaszurbuchen.appname.infra.mvi.storeModule
 import io.nicolaszurbuchen.appname.infra.navigation.infraNavigationModule
@@ -12,4 +14,6 @@ val appModule = listOf(
     infraNavigationModule,
     networkModule,
     storeModule,
+    numberGeneratorModule,
+    numberGeneratorPlatformModule,
 )

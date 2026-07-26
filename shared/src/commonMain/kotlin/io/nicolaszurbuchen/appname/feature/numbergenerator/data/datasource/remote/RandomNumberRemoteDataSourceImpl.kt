@@ -3,6 +3,7 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remo
 import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.api.RandomNumberApi
+import kotlinx.coroutines.CancellationException
 
 class RandomNumberRemoteDataSourceImpl(
     private val api: RandomNumberApi,
@@ -13,6 +14,8 @@ class RandomNumberRemoteDataSourceImpl(
     ): Int =
         try {
             api.getRandomNumber(min, max)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             throw AppException(AppError.NumberGenerator.NumberFetchFailed)
         }

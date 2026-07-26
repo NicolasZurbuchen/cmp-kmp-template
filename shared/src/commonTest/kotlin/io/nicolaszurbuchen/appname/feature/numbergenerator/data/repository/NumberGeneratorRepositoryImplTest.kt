@@ -29,8 +29,14 @@ private class FakeRandomNumberRemoteDataSource(
 private class FakeNumberFactRemoteDataSource(
     private val result: String? = null,
     private val failure: Exception? = null,
+    private val failuresByNumber: Map<Int, Exception> = emptyMap(),
+    private val resultsByNumber: Map<Int, String?> = emptyMap(),
 ) : NumberFactRemoteDataSource {
-    override suspend fun fetchFact(number: Int): String? = failure?.let { throw it } ?: result
+    override suspend fun fetchFact(number: Int): String? {
+        failuresByNumber[number]?.let { throw it }
+        if (resultsByNumber.containsKey(number)) return resultsByNumber.getValue(number)
+        return failure?.let { throw it } ?: result
+    }
 }
 
 private class FakeConnectivityChecker(
@@ -43,6 +49,7 @@ private class FakeGeneratedNumberLocalDataSource : GeneratedNumberLocalDataSourc
     var lastInsert: Triple<Int, String?, Boolean>? = null
     var rows: MutableList<GeneratedNumberEntity> = mutableListOf()
     var lastSetFavorite: Pair<Long, Boolean>? = null
+    val updateFactCalls: MutableList<Triple<Long, String, Boolean>> = mutableListOf()
 
     override suspend fun insert(
         value: Int,
@@ -69,9 +76,15 @@ private class FakeGeneratedNumberLocalDataSource : GeneratedNumberLocalDataSourc
         id: Long,
         fact: String,
         isSynced: Boolean,
-    ) = Unit
+    ) {
+        updateFactCalls.add(Triple(id, fact, isSynced))
+        val index = rows.indexOfFirst { it.id == id }
+        if (index != -1) {
+            rows[index] = rows[index].copy(fact = fact, is_synced = if (isSynced) 1L else 0L)
+        }
+    }
 
-    override suspend fun getUnsynced(): List<GeneratedNumberEntity> = emptyList()
+    override suspend fun getUnsynced(): List<GeneratedNumberEntity> = rows.filter { it.is_synced == 0L }
 }
 
 class NumberGeneratorRepositoryImplTest {
@@ -189,5 +202,97 @@ class NumberGeneratorRepositoryImplTest {
             repository.toggleFavorite(999L)
 
             assertEquals(null, local.lastSetFavorite)
+        }
+
+    @Test
+    fun `syncPending updates rows whose fact fetch succeeds`() =
+        runTest {
+            val local =
+                FakeGeneratedNumberLocalDataSource().apply {
+                    rows.add(GeneratedNumberEntity(1L, 42L, null, 100L, 0L, 0L))
+                }
+            val repository =
+                NumberGeneratorRepositoryImpl(
+                    randomNumberRemoteDataSource = FakeRandomNumberRemoteDataSource(result = 1),
+                    numberFactRemoteDataSource = FakeNumberFactRemoteDataSource(result = "42 is nice"),
+                    localDataSource = local,
+                    connectivityChecker = FakeConnectivityChecker(connected = true),
+                )
+
+            repository.syncPending()
+
+            assertEquals(listOf(Triple(1L, "42 is nice", true)), local.updateFactCalls)
+            assertEquals("42 is nice", local.rows.single().fact)
+            assertEquals(1L, local.rows.single().is_synced)
+        }
+
+    @Test
+    fun `syncPending leaves a row unsynced when its fact fetch fails`() =
+        runTest {
+            val local =
+                FakeGeneratedNumberLocalDataSource().apply {
+                    rows.add(GeneratedNumberEntity(1L, 42L, null, 100L, 0L, 0L))
+                }
+            val repository =
+                NumberGeneratorRepositoryImpl(
+                    randomNumberRemoteDataSource = FakeRandomNumberRemoteDataSource(result = 1),
+                    numberFactRemoteDataSource =
+                        FakeNumberFactRemoteDataSource(failure = AppException(AppError.NumberGenerator.FactFetchFailed)),
+                    localDataSource = local,
+                    connectivityChecker = FakeConnectivityChecker(connected = true),
+                )
+
+            repository.syncPending()
+
+            assertTrue(local.updateFactCalls.isEmpty())
+            assertEquals(null, local.rows.single().fact)
+            assertEquals(0L, local.rows.single().is_synced)
+        }
+
+    @Test
+    fun `syncPending does not throw when a row's fact fetch fails`() =
+        runTest {
+            val local =
+                FakeGeneratedNumberLocalDataSource().apply {
+                    rows.add(GeneratedNumberEntity(1L, 42L, null, 100L, 0L, 0L))
+                }
+            val repository =
+                NumberGeneratorRepositoryImpl(
+                    randomNumberRemoteDataSource = FakeRandomNumberRemoteDataSource(result = 1),
+                    numberFactRemoteDataSource =
+                        FakeNumberFactRemoteDataSource(failure = AppException(AppError.NumberGenerator.FactFetchFailed)),
+                    localDataSource = local,
+                    connectivityChecker = FakeConnectivityChecker(connected = true),
+                )
+
+            repository.syncPending()
+        }
+
+    @Test
+    fun `syncPending syncs the row that succeeds even when another row in the same call fails`() =
+        runTest {
+            val local =
+                FakeGeneratedNumberLocalDataSource().apply {
+                    rows.add(GeneratedNumberEntity(1L, 13L, null, 100L, 0L, 0L))
+                    rows.add(GeneratedNumberEntity(2L, 42L, null, 200L, 0L, 0L))
+                }
+            val repository =
+                NumberGeneratorRepositoryImpl(
+                    randomNumberRemoteDataSource = FakeRandomNumberRemoteDataSource(result = 1),
+                    numberFactRemoteDataSource =
+                        FakeNumberFactRemoteDataSource(
+                            failuresByNumber = mapOf(13 to AppException(AppError.NumberGenerator.FactFetchFailed)),
+                            resultsByNumber = mapOf(42 to "42 is nice"),
+                        ),
+                    localDataSource = local,
+                    connectivityChecker = FakeConnectivityChecker(connected = true),
+                )
+
+            repository.syncPending()
+
+            assertEquals(listOf(Triple(2L, "42 is nice", true)), local.updateFactCalls)
+            assertEquals(0L, local.rows.single { it.id == 1L }.is_synced)
+            assertEquals(1L, local.rows.single { it.id == 2L }.is_synced)
+            assertEquals("42 is nice", local.rows.single { it.id == 2L }.fact)
         }
 }

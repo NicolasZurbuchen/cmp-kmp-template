@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.sqldelight)
 }
 
 ktlint {
@@ -63,13 +64,15 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.android.driver)
             implementation(libs.compose.uiTooling)
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
+            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
             implementation(libs.bundles.ktor.common)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.foundation)
@@ -84,17 +87,26 @@ kotlin {
             implementation(libs.mvikotlin.main)
             implementation(libs.mvikotlin.extensions.coroutines)
             implementation(libs.navigation3.ui)
-            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+            implementation(libs.sqldelight.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
         }
     }
 }
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("io.nicolaszurbuchen.appname.cache")
+        }
+    }
 }

@@ -1,0 +1,15 @@
+CREATE TABLE NumberEntity (
+    id INTEGER NOT NULL PRIMARY KEY,
+    number INTEGER NOT NULL,
+    generated_at INTEGER NOT NULL
+);
+
+insertNumber:
+INSERT OR REPLACE INTO NumberEntity(id, number, generated_at)
+VALUES (?, ?, ?);
+
+getAllNumbers:
+SELECT * FROM NumberEntity;
+
+deleteAllNumbers:
+DELETE FROM NumberEntity;

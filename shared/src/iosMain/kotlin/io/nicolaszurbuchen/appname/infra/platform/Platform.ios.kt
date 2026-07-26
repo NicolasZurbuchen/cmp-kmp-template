@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname
+package io.nicolaszurbuchen.appname.infra.platform
 
 import platform.UIKit.UIDevice
 

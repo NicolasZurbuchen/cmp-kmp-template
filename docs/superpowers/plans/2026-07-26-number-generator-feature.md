@@ -257,7 +257,7 @@ Then in `shared/build.gradle.kts`, add it to the `commonTest.dependencies` block
 
 - [ ] **Step 3: Run the tests to verify they fail**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.*"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.*"`
 Expected: FAIL to compile — `GenerateNumberUseCase`, `ObserveHistoryUseCase`, `ToggleFavoriteUseCase`, `SyncPendingUseCase` are unresolved references.
 
 - [ ] **Step 4: Implement the four use cases**
@@ -315,7 +315,7 @@ class SyncPendingUseCase(
 
 - [ ] **Step 5: Run the tests to verify they pass**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.*"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.*"`
 Expected: BUILD SUCCESSFUL, 4 tests passed.
 
 - [ ] **Step 6: Commit**
@@ -434,7 +434,7 @@ class NumberGeneratorLocalMapperTest {
 
 - [ ] **Step 4: Run test to verify it fails**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper.NumberGeneratorLocalMapperTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper.NumberGeneratorLocalMapperTest"`
 Expected: FAIL to compile — `toDomain` is unresolved.
 
 - [ ] **Step 5: Implement the mapper**
@@ -458,7 +458,7 @@ fun GeneratedNumberEntity.toDomain(): GeneratedNumber =
 
 - [ ] **Step 6: Run test to verify it passes**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper.NumberGeneratorLocalMapperTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper.NumberGeneratorLocalMapperTest"`
 Expected: BUILD SUCCESSFUL, 2 tests passed.
 
 - [ ] **Step 7: Commit**
@@ -717,7 +717,7 @@ Note: `SystemConfiguration` reachability symbol names have shifted slightly acro
 
 - [ ] **Step 6: Build both platform targets**
 
-Run: `.\gradlew.bat :shared:compileDebugKotlinAndroid`
+Run: `.\gradlew.bat :shared:compileAndroidMain`
 Expected: BUILD SUCCESSFUL
 
 Run: `.\gradlew.bat :shared:compileKotlinIosSimulatorArm64`
@@ -784,7 +784,7 @@ class NumberGeneratorRemoteMapperTest {
 
 - [ ] **Step 3: Run test to verify it fails**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.mapper.NumberGeneratorRemoteMapperTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.mapper.NumberGeneratorRemoteMapperTest"`
 Expected: FAIL to compile — `toValue` unresolved.
 
 - [ ] **Step 4: Implement the mapper**
@@ -801,7 +801,7 @@ fun NumberFactDto.toValue(): String? = text.takeIf { found }
 
 - [ ] **Step 5: Run test to verify it passes**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.mapper.NumberGeneratorRemoteMapperTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.mapper.NumberGeneratorRemoteMapperTest"`
 Expected: BUILD SUCCESSFUL, 2 tests passed.
 
 - [ ] **Step 6: Commit**
@@ -1207,7 +1207,7 @@ class NumberGeneratorRepositoryImplTest {
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository.NumberGeneratorRepositoryImplTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository.NumberGeneratorRepositoryImplTest"`
 Expected: FAIL to compile — `NumberGeneratorRepositoryImpl` unresolved.
 
 - [ ] **Step 3: Implement the repository**
@@ -1288,7 +1288,7 @@ class NumberGeneratorRepositoryImpl(
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository.NumberGeneratorRepositoryImplTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository.NumberGeneratorRepositoryImplTest"`
 Expected: BUILD SUCCESSFUL, 6 tests passed.
 
 - [ ] **Step 5: Commit**
@@ -1493,7 +1493,7 @@ class GenerateReducerTest {
 
 - [ ] **Step 3: Run test to verify it fails**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateReducerTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateReducerTest"`
 Expected: FAIL to compile — `GenerateReducer` unresolved.
 
 - [ ] **Step 4: Implement the reducer**
@@ -1525,7 +1525,7 @@ internal object GenerateReducer : Reducer<GenerateState, GenerateMessage> {
 
 - [ ] **Step 5: Run test to verify it passes**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateReducerTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateReducerTest"`
 Expected: BUILD SUCCESSFUL, 4 tests passed.
 
 - [ ] **Step 6: StoreFactory**
@@ -1940,7 +1940,7 @@ class HistoryReducerTest {
 
 - [ ] **Step 3: Run test to verify it fails**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.history.HistoryReducerTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.history.HistoryReducerTest"`
 Expected: FAIL to compile — `HistoryReducer` unresolved.
 
 - [ ] **Step 4: Implement the reducer**
@@ -1962,7 +1962,7 @@ internal object HistoryReducer : Reducer<HistoryState, HistoryMessage> {
 
 - [ ] **Step 5: Run test to verify it passes**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.history.HistoryReducerTest"`
+Run: `.\gradlew.bat :shared:testAndroidHostTest --tests "io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.history.HistoryReducerTest"`
 Expected: BUILD SUCCESSFUL, 3 tests passed.
 
 - [ ] **Step 6: StoreFactory**
@@ -2505,7 +2505,7 @@ fun App() {
 
 - [ ] **Step 6: Build both platform targets**
 
-Run: `.\gradlew.bat :shared:compileDebugKotlinAndroid`
+Run: `.\gradlew.bat :shared:compileAndroidMain`
 Expected: BUILD SUCCESSFUL
 
 Run: `.\gradlew.bat :shared:compileKotlinIosSimulatorArm64`
@@ -2526,7 +2526,7 @@ git commit -m "feat(number-generator): wire the feature into the app shell as th
 
 - [ ] **Step 1: Run the full shared test suite**
 
-Run: `.\gradlew.bat :shared:testDebugUnitTest`
+Run: `.\gradlew.bat :shared:testAndroidHostTest`
 Expected: BUILD SUCCESSFUL — all tests across every task pass together (use case, mapper, repository, and both reducer test classes).
 
 - [ ] **Step 2: Run the Konsist architecture tests**

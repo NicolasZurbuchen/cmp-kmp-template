@@ -53,7 +53,15 @@ class HistoryStoreFactory(
         override fun executeIntent(intent: HistoryIntent) {
             when (intent) {
                 is HistoryIntent.ToggleFavorite -> {
-                    scope.launch { toggleFavorite(intent.id) }
+                    scope.launch {
+                        try {
+                            toggleFavorite(intent.id)
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (_: Exception) {
+                            // Best-effort; the list will simply show the unchanged favorite state.
+                        }
+                    }
                 }
 
                 HistoryIntent.SyncNowClicked -> {

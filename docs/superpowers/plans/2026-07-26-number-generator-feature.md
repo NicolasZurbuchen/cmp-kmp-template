@@ -585,10 +585,10 @@ git commit -m "feat(number-generator): add local data source"
 ### Task 5: Connectivity checker (interface + platform module, no infra edits)
 
 **Files:**
-- Create: `shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/datasource/local/ConnectivityChecker.kt`
+- Create: `shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/platform/ConnectivityChecker.kt`
 - Create: `shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt`
-- Create: `shared/src/androidMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.android.kt`
-- Create: `shared/src/iosMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.ios.kt`
+- Create: `shared/src/androidMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt`
+- Create: `shared/src/iosMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt`
 - Modify: `androidApp/src/main/AndroidManifest.xml`
 
 `ConnectivityChecker` is a **plain interface** (fakeable in tests), not an `expect class` — this is what makes `NumberGeneratorRepositoryImpl` testable with a fake in Task 6. The real platform implementations are bound via an `expect val Module` (a Koin module value, not a class), which is a legitimate KMP pattern and keeps the Context-dependent Android wiring out of commonMain without touching `infra/di/PlatformModule.kt`.
@@ -596,7 +596,7 @@ git commit -m "feat(number-generator): add local data source"
 - [ ] **Step 1: Create the common interface**
 
 ```kotlin
-package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local
+package io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform
 
 interface ConnectivityChecker {
     fun isConnected(): Boolean
@@ -654,7 +654,7 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.di
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -682,7 +682,7 @@ This relies on Koin's Android `Context` already being registered via `androidCon
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.di
 
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
@@ -725,7 +725,7 @@ Expected: BUILD SUCCESSFUL (adjust cinterop imports per the note above if this f
 - [ ] **Step 7: Commit**
 
 ```bash
-git add shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/datasource/local/ConnectivityChecker.kt shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt shared/src/androidMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.android.kt shared/src/iosMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.ios.kt androidApp/src/main/AndroidManifest.xml
+git add shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/data/platform/ConnectivityChecker.kt shared/src/commonMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt shared/src/androidMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt shared/src/iosMain/kotlin/io/nicolaszurbuchen/appname/feature/numbergenerator/di/NumberGeneratorPlatformModule.kt androidApp/src/main/AndroidManifest.xml
 git commit -m "feat(number-generator): add connectivity checker with platform-specific Koin module"
 ```
 
@@ -1013,7 +1013,7 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository
 
 import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberEntity
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberLocalDataSource
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.NumberFactRemoteDataSource
@@ -1214,7 +1214,7 @@ Expected: FAIL to compile — `NumberGeneratorRepositoryImpl` unresolved.
 ```kotlin
 package io.nicolaszurbuchen.appname.feature.numbergenerator.data.repository
 
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.GeneratedNumberLocalDataSource
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.mapper.toDomain
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.NumberFactRemoteDataSource

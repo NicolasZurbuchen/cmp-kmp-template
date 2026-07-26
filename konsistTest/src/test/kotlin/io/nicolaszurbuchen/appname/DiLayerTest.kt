@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class DiLayerTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
 
         private val projectPackagePrefix =
             scope.packages

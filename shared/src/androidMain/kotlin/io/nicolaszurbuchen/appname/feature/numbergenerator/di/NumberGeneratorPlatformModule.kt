@@ -3,7 +3,7 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.di
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

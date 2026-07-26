@@ -1,6 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.numbergenerator.di
 
-import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.local.ConnectivityChecker
+import io.nicolaszurbuchen.appname.feature.numbergenerator.data.platform.ConnectivityChecker
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped

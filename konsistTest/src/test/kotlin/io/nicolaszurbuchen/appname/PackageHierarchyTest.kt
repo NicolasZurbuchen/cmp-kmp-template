@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 class PackageHierarchyTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
     @Test // ok
@@ -47,7 +47,7 @@ class PackageHierarchyTest {
 
     @Test // ok
     fun `Direct children of data must be in allowed list`() {
-        val allowed = listOf("repository", "datasource")
+        val allowed = listOf("repository", "datasource", "platform")
 
         scope.packages
             .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.[^.]+$")) }

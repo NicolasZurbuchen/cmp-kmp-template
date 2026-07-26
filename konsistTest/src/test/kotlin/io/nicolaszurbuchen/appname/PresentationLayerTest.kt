@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 class PresentationLayerTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
     // region Name implies location

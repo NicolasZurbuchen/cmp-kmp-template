@@ -61,8 +61,9 @@ class PresentationLayerTest {
     // region Location implies name
 
     @Test
-    fun `files in screen packages must be suffixed with Contract, Preview, Route, Screen, StoreFactory, or ViewModel`() {
-        val allowedSuffixes = setOf("Contract", "Preview", "Route", "Screen", "StoreFactory", "ViewModel")
+    fun `files in screen packages must be suffixed with Contract, Preview, Reducer, Route, Screen, StoreFactory, UiMapper, UiModel, or ViewModel`() {
+        val allowedSuffixes =
+            setOf("Contract", "Preview", "Reducer", "Route", "Screen", "StoreFactory", "UiMapper", "UiModel", "ViewModel")
 
         scope.files
             .withPackage("..presentation.screen..")
@@ -139,7 +140,8 @@ class PresentationLayerTest {
 
     @Test
     fun `screen folders must contain only allowed file names`() {
-        val allowedSuffixes = setOf("Contract", "Preview", "Route", "Screen", "StoreFactory", "ViewModel")
+        val allowedSuffixes =
+            setOf("Contract", "Preview", "Reducer", "Route", "Screen", "StoreFactory", "UiMapper", "UiModel", "ViewModel")
 
         scope.files
             .withPackage("..presentation.screen..")
@@ -298,7 +300,9 @@ class PresentationLayerTest {
                 val stateProperty =
                     file.classes().single()
                         .properties().firstOrNull { it.name == "state" }
-                stateProperty == null || stateProperty.type?.name == "StateFlow<${prefix}State>"
+                stateProperty == null ||
+                    stateProperty.type?.name == "StateFlow<${prefix}State>" ||
+                    stateProperty.type?.name == "StateFlow<${prefix}UiModel>"
             }
     }
 
@@ -477,6 +481,7 @@ class PresentationLayerTest {
                     .parameters.all { param ->
                         param.type.name == "Modifier" ||
                             param.type.name == "${prefix}State" ||
+                            param.type.name == "${prefix}UiModel" ||
                             param.type.isFunctionType
                     }
             }
@@ -492,7 +497,9 @@ class PresentationLayerTest {
                 val stateParam =
                     file.functions()
                         .single { it.isTopLevel && it.hasPublicOrDefaultModifier }
-                        .parameters.firstOrNull { it.type.name == "${prefix}State" }
+                        .parameters.firstOrNull {
+                            it.type.name == "${prefix}State" || it.type.name == "${prefix}UiModel"
+                        }
                 stateParam == null || !stateParam.hasDefaultValue()
             }
     }

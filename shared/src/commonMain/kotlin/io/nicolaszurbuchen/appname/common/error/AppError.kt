@@ -30,6 +30,12 @@ sealed interface AppError {
         data object RateLimit : Trivia
     }
 
+    sealed interface NumberGenerator : AppError {
+        data object NumberFetchFailed : NumberGenerator
+
+        data object FactFetchFailed : NumberGenerator
+    }
+
     data class Unexpected(
         val cause: Throwable,
     ) : AppError

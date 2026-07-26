@@ -17,8 +17,11 @@ import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.Genera
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.ObserveHistoryUseCase
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.SyncPendingUseCase
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.ToggleFavoriteUseCase
+import io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateStoreFactory
+import io.nicolaszurbuchen.appname.feature.numbergenerator.presentation.screen.generate.GenerateViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -39,4 +42,7 @@ val numberGeneratorModule =
         factoryOf(::ObserveHistoryUseCase)
         factoryOf(::ToggleFavoriteUseCase)
         factoryOf(::SyncPendingUseCase)
+
+        factoryOf(::GenerateStoreFactory)
+        viewModelOf(::GenerateViewModel)
     }

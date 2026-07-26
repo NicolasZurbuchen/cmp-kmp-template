@@ -938,6 +938,7 @@ package io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remo
 import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.api.RandomNumberApi
+import kotlinx.coroutines.CancellationException
 
 class RandomNumberRemoteDataSourceImpl(
     private val api: RandomNumberApi,
@@ -948,11 +949,15 @@ class RandomNumberRemoteDataSourceImpl(
     ): Int =
         try {
             api.getRandomNumber(min, max)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             throw AppException(AppError.NumberGenerator.NumberFetchFailed)
         }
 }
 ```
+
+(Note: `catch (e: CancellationException) { throw e }` must come before the generic `catch (_: Exception)` — otherwise a coroutine cancellation would be swallowed and converted into a business error instead of propagating, breaking structured concurrency.)
 
 - [ ] **Step 2: Number fact remote data source**
 
@@ -971,6 +976,7 @@ import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.api.NumberFactApi
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.mapper.toValue
+import kotlinx.coroutines.CancellationException
 
 class NumberFactRemoteDataSourceImpl(
     private val api: NumberFactApi,
@@ -978,6 +984,8 @@ class NumberFactRemoteDataSourceImpl(
     override suspend fun fetchFact(number: Int): String? =
         try {
             api.getFact(number).toValue()
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             throw AppException(AppError.NumberGenerator.FactFetchFailed)
         }
@@ -1221,6 +1229,7 @@ import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remot
 import io.nicolaszurbuchen.appname.feature.numbergenerator.data.datasource.remote.RandomNumberRemoteDataSource
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.model.GeneratedNumber
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.repository.NumberGeneratorRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.time.Clock
@@ -1241,6 +1250,8 @@ class NumberGeneratorRepositoryImpl(
             if (connectivityChecker.isConnected()) {
                 try {
                     numberFactRemoteDataSource.fetchFact(value)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (_: Exception) {
                     null
                 }
@@ -1277,6 +1288,8 @@ class NumberGeneratorRepositoryImpl(
                 if (fact != null) {
                     localDataSource.updateFact(row.id, fact, isSynced = true)
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
                 // Leave this row unsynced; the next manual sync will retry it.
             }
@@ -1538,6 +1551,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.nicolaszurbuchen.appname.common.error.AppError
 import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.GenerateNumberUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 interface GenerateStore : Store<GenerateIntent, GenerateState, GenerateLabel>
@@ -1575,6 +1589,8 @@ class GenerateStoreFactory(
                     }
                 } catch (e: AppException) {
                     dispatch(GenerateMessage.GenerationFailed(e.error))
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     dispatch(GenerateMessage.GenerationFailed(AppError.Unexpected(e)))
                 }
@@ -1978,6 +1994,7 @@ import io.nicolaszurbuchen.appname.common.error.AppException
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.ObserveHistoryUseCase
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.SyncPendingUseCase
 import io.nicolaszurbuchen.appname.feature.numbergenerator.domain.usecase.ToggleFavoriteUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 interface HistoryStore : Store<HistoryIntent, HistoryState, HistoryLabel>
@@ -2038,6 +2055,8 @@ class HistoryStoreFactory(
                     dispatch(HistoryMessage.SyncFinished(error = null))
                 } catch (e: AppException) {
                     dispatch(HistoryMessage.SyncFinished(error = e.error))
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
                     dispatch(HistoryMessage.SyncFinished(error = AppError.Unexpected(e)))
                 }

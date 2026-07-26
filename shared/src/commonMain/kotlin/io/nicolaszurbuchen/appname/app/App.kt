@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname
+package io.nicolaszurbuchen.appname.app
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -13,9 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import appname.shared.generated.resources.Res
 import appname.shared.generated.resources.compose_multiplatform
+import io.nicolaszurbuchen.appname.Greeting
 import io.nicolaszurbuchen.appname.app.design.theme.AppNameTheme
 import org.jetbrains.compose.resources.painterResource
 

@@ -290,7 +290,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `ViewModel state property must be a StateFlow of the matching State type`() {
+    fun `ViewModel state property must be a StateFlow of the matching State or UiModel type`() {
         scope.files
             .withNameEndingWith("ViewModel")
             .withPackage("..presentation.screen..")
@@ -470,7 +470,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Screen public function parameters must only be Modifier, matching State, or lambdas`() {
+    fun `Screen public function parameters must only be Modifier, matching State or UiModel, or lambdas`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")
@@ -488,7 +488,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Screen State parameter must not have a default value`() {
+    fun `Screen State or UiModel parameter must not have a default value`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")

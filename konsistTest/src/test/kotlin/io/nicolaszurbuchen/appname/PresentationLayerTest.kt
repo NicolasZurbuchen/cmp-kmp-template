@@ -61,9 +61,19 @@ class PresentationLayerTest {
     // region Location implies name
 
     @Test
-    fun `files in screen packages must be suffixed with Contract, Preview, Reducer, Route, Screen, StoreFactory, UiMapper, UiModel, or ViewModel`() {
+    fun `files in screen packages must use an allowed suffix`() {
         val allowedSuffixes =
-            setOf("Contract", "Preview", "Reducer", "Route", "Screen", "StoreFactory", "UiMapper", "UiModel", "ViewModel")
+            setOf(
+                "Contract",
+                "Preview",
+                "Reducer",
+                "Route",
+                "Screen",
+                "StoreFactory",
+                "UiMapper",
+                "UiModel",
+                "ViewModel",
+            )
 
         scope.files
             .withPackage("..presentation.screen..")

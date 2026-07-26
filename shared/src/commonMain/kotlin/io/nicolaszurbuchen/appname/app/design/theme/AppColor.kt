@@ -63,9 +63,9 @@ val LightAppColors =
         onAccentSubtle = CobaltPalette.cobalt800,
     )
 
-internal val LocalAppColors = staticCompositionLocalOf { DarkAppColors }
+internal val LocalAppNameColors = staticCompositionLocalOf { DarkAppColors }
 
 val MaterialTheme.appColors: AppColors
     @Composable
     @ReadOnlyComposable
-    get() = LocalAppColors.current
+    get() = LocalAppNameColors.current

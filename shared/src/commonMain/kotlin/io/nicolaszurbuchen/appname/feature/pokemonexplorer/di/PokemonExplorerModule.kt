@@ -23,16 +23,10 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import kotlin.random.Random
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 val pokemonExplorerModule =
     module {
         single { get<AppDatabase>().cachedPokemonQueries }
-        single<Random> { Random.Default }
-        single<Clock> { Clock.System }
 
         singleOf(::PokemonApiImpl) bind PokemonApi::class
         singleOf(::PokemonRemoteDataSourceImpl) bind PokemonRemoteDataSource::class

@@ -16,8 +16,7 @@ import kotlin.time.ExperimentalTime
 class PokemonExplorerRepositoryImpl(
     private val remoteDataSource: PokemonRemoteDataSource,
     private val localDataSource: PokemonLocalDataSource,
-    private val random: Random = Random.Default,
-    private val clock: Clock = Clock.System,
+    private val currentTimeMillis: () -> Long = { Clock.System.now().toEpochMilliseconds() },
 ) : PokemonExplorerRepository {
     companion object {
         // PokéAPI's /pokemon/{id} endpoint currently resolves ids 1 through 1025
@@ -27,8 +26,8 @@ class PokemonExplorerRepositoryImpl(
     }
 
     override suspend fun fetchRandomPokemon(): Pokemon {
-        val speciesId = random.nextInt(MIN_POKEMON_ID, MAX_POKEMON_ID + 1)
-        val fetchedAt = clock.now().toEpochMilliseconds()
+        val speciesId = Random.nextInt(MIN_POKEMON_ID, MAX_POKEMON_ID + 1)
+        val fetchedAt = currentTimeMillis()
         val dto = remoteDataSource.fetchPokemon(speciesId)
 
         val historyId =

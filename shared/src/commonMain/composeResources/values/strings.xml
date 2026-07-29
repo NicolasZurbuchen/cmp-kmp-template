@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pokemon_main_fab_description">Find a random Pokémon</string>
+    <string name="pokemon_main_history_title">History</string>
+    <string name="pokemon_main_clear_list">Clear list</string>
+    <string name="pokemon_main_empty_state">Tap the button below to discover your first Pokémon</string>
+
+    <string name="pokemon_detail_back">Back</string>
+    <string name="pokemon_detail_not_found">Pokémon not found</string>
+    <string name="pokemon_detail_height_label">Height: %1$s</string>
+    <string name="pokemon_detail_weight_label">Weight: %1$s</string>
+
+    <string name="error_retry">Retry</string>
+    <string name="error_dismiss">Dismiss</string>
+    <string name="error_network_unavailable_title">No internet connection</string>
+    <string name="error_network_unavailable_subtitle">Please check your network settings.</string>
+    <string name="error_network_timeout_title">Request timed out</string>
+    <string name="error_network_timeout_subtitle">The server took too long to respond.</string>
+    <string name="error_network_http_title">Network error</string>
+    <string name="error_network_http_subtitle_default">Something went wrong. Try again.</string>
+    <string name="error_database_query_failed_title">Couldn\'t read from storage</string>
+    <string name="error_database_generic_subtitle">Something went wrong. Try again.</string>
+    <string name="error_database_insert_failed_title">Couldn\'t save to storage</string>
+    <string name="error_pokemon_fetch_failed_title">Couldn\'t fetch a Pokémon</string>
+    <string name="error_pokemon_fetch_failed_subtitle">Check your connection and try again.</string>
+    <string name="error_unexpected_title">Something went wrong</string>
+    <string name="error_unexpected_subtitle">Please try again.</string>
+</resources>

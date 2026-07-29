@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.component
+package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,15 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.PokemonItemUiModel
 
 private val HERO_IMAGE_SIZE = 120.dp
 private val ROW_IMAGE_SIZE = 56.dp
 
 @Composable
 fun PokemonListItem(
-    numberText: String,
-    name: String,
-    spriteUrl: String,
+    item: PokemonItemUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isHero: Boolean = false,
@@ -40,19 +39,19 @@ fun PokemonListItem(
                 .padding(12.dp),
     ) {
         AsyncImage(
-            model = spriteUrl,
-            contentDescription = name,
+            model = item.spriteUrl,
+            contentDescription = item.name,
             modifier = Modifier.size(if (isHero) HERO_IMAGE_SIZE else ROW_IMAGE_SIZE),
         )
 
         Column(modifier = Modifier.padding(start = 12.dp)) {
             Text(
-                text = numberText,
+                text = item.numberText,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                text = name,
+                text = item.name,
                 style = if (isHero) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

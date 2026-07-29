@@ -10,7 +10,7 @@ data class MainUiModel(
 )
 
 data class PokemonItemUiModel(
-    val id: Int,
+    val historyId: Long,
     val numberText: String,
     val name: String,
     val spriteUrl: String,

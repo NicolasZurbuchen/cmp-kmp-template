@@ -21,27 +21,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import appname.shared.generated.resources.Res
+import appname.shared.generated.resources.pokemon_main_clear_list
+import appname.shared.generated.resources.pokemon_main_empty_state
+import appname.shared.generated.resources.pokemon_main_fab_description
+import appname.shared.generated.resources.pokemon_main_history_title
 import io.nicolaszurbuchen.appname.app.design.component.AppErrorBanner
-import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.component.PokemonListItem
-import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.component.PokemonListItemShimmer
+import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItem
+import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItemShimmer
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MainScreen(
     state: MainUiModel,
     onGenerateClick: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
     onClearClick: () -> Unit,
     onRetryClick: () -> Unit,
     onDismissErrorClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
         floatingActionButton = {
             FloatingActionButton(onClick = onGenerateClick) {
-                Icon(Icons.Default.Refresh, contentDescription = "Find a random Pokémon")
+                Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.pokemon_main_fab_description))
             }
         },
+        modifier = modifier,
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             state.error?.let { error ->
@@ -59,11 +65,9 @@ fun MainScreen(
             } else {
                 state.hero?.let { hero ->
                     PokemonListItem(
-                        numberText = hero.numberText,
-                        name = hero.name,
-                        spriteUrl = hero.spriteUrl,
+                        item = hero,
                         isHero = true,
-                        onClick = { onItemClick(hero.id) },
+                        onClick = { onItemClick(hero.historyId) },
                     )
                 }
             }
@@ -73,9 +77,9 @@ fun MainScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "History", style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(Res.string.pokemon_main_history_title), style = MaterialTheme.typography.titleMedium)
                 TextButton(onClick = onClearClick, enabled = state.history.isNotEmpty()) {
-                    Text("Clear list")
+                    Text(stringResource(Res.string.pokemon_main_clear_list))
                 }
             }
 
@@ -89,7 +93,7 @@ fun MainScreen(
                 state.history.isEmpty() && state.hero == null -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = "Tap the button below to discover your first Pokémon",
+                            text = stringResource(Res.string.pokemon_main_empty_state),
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
@@ -97,12 +101,10 @@ fun MainScreen(
 
                 else -> {
                     LazyColumn {
-                        items(state.history, key = { it.id }) { item ->
+                        items(state.history, key = { it.historyId }) { item ->
                             PokemonListItem(
-                                numberText = item.numberText,
-                                name = item.name,
-                                spriteUrl = item.spriteUrl,
-                                onClick = { onItemClick(item.id) },
+                                item = item,
+                                onClick = { onItemClick(item.historyId) },
                             )
                         }
                     }

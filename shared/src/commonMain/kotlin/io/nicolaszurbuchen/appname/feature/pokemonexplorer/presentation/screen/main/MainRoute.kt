@@ -9,7 +9,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainRoute(
-    onNavigateToDetail: (Int) -> Unit,
+    onNavigateToDetail: (Long) -> Unit,
     viewModel: MainViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -18,7 +18,7 @@ fun MainRoute(
     LaunchedEffect(Unit) {
         viewModel.labels.collect { label ->
             when (label) {
-                is MainLabel.NavigateToDetail -> onNavigateToDetailUpdated(label.id)
+                is MainLabel.NavigateToDetail -> onNavigateToDetailUpdated(label.historyId)
             }
         }
     }
@@ -26,7 +26,7 @@ fun MainRoute(
     MainScreen(
         state = state,
         onGenerateClick = { viewModel.onIntent(MainIntent.GenerateClicked) },
-        onItemClick = { id -> viewModel.onIntent(MainIntent.ItemClicked(id)) },
+        onItemClick = { historyId -> viewModel.onIntent(MainIntent.ItemClicked(historyId)) },
         onClearClick = { viewModel.onIntent(MainIntent.ClearClicked) },
         onRetryClick = { viewModel.onIntent(MainIntent.RetryClicked) },
         onDismissErrorClick = { viewModel.onIntent(MainIntent.DismissErrorClicked) },

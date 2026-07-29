@@ -3,9 +3,13 @@ package io.nicolaszurbuchen.appname.feature.pokemonexplorer.data.datasource.remo
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.data.datasource.remote.dto.PokemonDto
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.model.Pokemon
 
-fun PokemonDto.toDomain(fetchedAt: Long): Pokemon =
+fun PokemonDto.toDomain(
+    historyId: Long,
+    fetchedAt: Long,
+): Pokemon =
     Pokemon(
-        id = id,
+        historyId = historyId,
+        speciesId = id,
         name = name,
         spriteUrl = sprites.frontDefault.orEmpty(),
         height = height,

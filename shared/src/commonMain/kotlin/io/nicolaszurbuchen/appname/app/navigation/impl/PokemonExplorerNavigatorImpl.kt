@@ -7,8 +7,8 @@ import io.nicolaszurbuchen.appname.infra.navigation.AppNavigator
 class PokemonExplorerNavigatorImpl(
     private val appNavigator: AppNavigator,
 ) : PokemonExplorerNavigator {
-    override fun navigateToDetail(id: Int) {
-        appNavigator.navigateTo(DetailDestination(id))
+    override fun navigateToDetail(historyId: Long) {
+        appNavigator.navigateTo(DetailDestination(historyId))
     }
 
     override fun navigateBack() {

@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.component
+package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

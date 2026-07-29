@@ -7,7 +7,7 @@ sealed interface MainIntent {
     data object GenerateClicked : MainIntent
 
     data class ItemClicked(
-        val id: Int,
+        val historyId: Long,
     ) : MainIntent
 
     data object ClearClicked : MainIntent
@@ -19,7 +19,7 @@ sealed interface MainIntent {
 
 sealed interface MainLabel {
     data class NavigateToDetail(
-        val id: Int,
+        val historyId: Long,
     ) : MainLabel
 }
 

@@ -1,5 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.detail
 
+import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
@@ -12,7 +13,7 @@ interface DetailStore : Store<DetailIntent, DetailState, DetailLabel>
 class DetailStoreFactory(
     private val storeFactory: StoreFactory,
     private val getPokemonById: GetPokemonByIdUseCase,
-    private val id: Int,
+    private val historyId: Long,
 ) {
     fun create(): DetailStore =
         object :
@@ -22,7 +23,7 @@ class DetailStoreFactory(
                 initialState = DetailState(),
                 bootstrapper = BootstrapperImpl(),
                 executorFactory = { ExecutorImpl() },
-                reducer = DetailReducer,
+                reducer = ReducerImpl,
             ) {}
 
     private inner class BootstrapperImpl : CoroutineBootstrapper<DetailAction>() {
@@ -48,9 +49,16 @@ class DetailStoreFactory(
                 // (via Main's "Clear list") while this screen is open, the already-loaded
                 // Pokemon below simply goes stale instead of reacting live. That's an accepted
                 // tradeoff for this template, not an oversight.
-                val pokemon = getPokemonById(id)
+                val pokemon = getPokemonById(historyId)
                 dispatch(DetailMessage.PokemonLoaded(pokemon))
             }
         }
+    }
+
+    private object ReducerImpl : Reducer<DetailState, DetailMessage> {
+        override fun DetailState.reduce(msg: DetailMessage): DetailState =
+            when (msg) {
+                is DetailMessage.PokemonLoaded -> copy(isLoading = false, pokemon = msg.pokemon)
+            }
     }
 }

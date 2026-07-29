@@ -1,5 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main
 
+import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
@@ -29,7 +30,7 @@ class MainStoreFactory(
                 initialState = MainState(isLoading = true),
                 bootstrapper = BootstrapperImpl(),
                 executorFactory = { ExecutorImpl() },
-                reducer = MainReducer,
+                reducer = ReducerImpl,
             ) {}
 
     private class BootstrapperImpl : CoroutineBootstrapper<MainAction>() {
@@ -50,7 +51,7 @@ class MainStoreFactory(
         override fun executeIntent(intent: MainIntent) {
             when (intent) {
                 MainIntent.GenerateClicked, MainIntent.RetryClicked -> generate()
-                is MainIntent.ItemClicked -> publish(MainLabel.NavigateToDetail(intent.id))
+                is MainIntent.ItemClicked -> publish(MainLabel.NavigateToDetail(intent.historyId))
                 MainIntent.ClearClicked -> scope.launch { clearHistory() }
                 MainIntent.DismissErrorClicked -> dispatch(MainMessage.ErrorDismissed)
             }
@@ -80,5 +81,15 @@ class MainStoreFactory(
                     }
                 }
         }
+    }
+
+    private object ReducerImpl : Reducer<MainState, MainMessage> {
+        override fun MainState.reduce(msg: MainMessage): MainState =
+            when (msg) {
+                MainMessage.GenerationStarted -> copy(isLoading = true, error = null)
+                is MainMessage.HistoryUpdated -> copy(isLoading = false, history = msg.items)
+                is MainMessage.GenerationFailed -> copy(isLoading = false, error = msg.error)
+                MainMessage.ErrorDismissed -> copy(error = null)
+            }
     }
 }

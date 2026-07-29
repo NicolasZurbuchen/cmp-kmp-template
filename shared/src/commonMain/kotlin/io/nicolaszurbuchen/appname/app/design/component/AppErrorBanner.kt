@@ -21,9 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import appname.shared.generated.resources.Res
+import appname.shared.generated.resources.error_dismiss
+import appname.shared.generated.resources.error_retry
 import io.nicolaszurbuchen.appname.app.design.theme.spacing
 import io.nicolaszurbuchen.appname.infra.ui.UiText
 import io.nicolaszurbuchen.appname.infra.ui.asString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AppErrorBanner(
@@ -78,13 +82,13 @@ fun AppErrorBanner(
             ) {
                 onRetry?.let {
                     TextButton(onClick = it) {
-                        Text(text = "Retry", color = MaterialTheme.colorScheme.error)
+                        Text(text = stringResource(Res.string.error_retry), color = MaterialTheme.colorScheme.error)
                     }
                 }
 
                 onDismiss?.let {
                     TextButton(onClick = it) {
-                        Text(text = "Dismiss", color = MaterialTheme.colorScheme.error)
+                        Text(text = stringResource(Res.string.error_dismiss), color = MaterialTheme.colorScheme.error)
                     }
                 }
             }

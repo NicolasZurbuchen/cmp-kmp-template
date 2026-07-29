@@ -6,5 +6,5 @@ import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.repository.Pok
 class GetPokemonByIdUseCase(
     private val repository: PokemonExplorerRepository,
 ) {
-    suspend operator fun invoke(id: Int): Pokemon? = repository.getById(id)
+    suspend operator fun invoke(historyId: Long): Pokemon? = repository.getById(historyId)
 }

@@ -9,26 +9,28 @@ class PokemonLocalDataSourceImpl(
     private val queries: CachedPokemonQueries,
 ) : PokemonLocalDataSource {
     override suspend fun insert(
-        id: Int,
+        pokemonId: Int,
         name: String,
         spriteUrl: String,
         height: Int,
         weight: Int,
         fetchedAt: Long,
-    ) {
-        queries.insertPokemon(
-            id = id.toLong(),
-            name = name,
-            sprite_url = spriteUrl,
-            height = height.toLong(),
-            weight = weight.toLong(),
-            fetched_at = fetchedAt,
-        )
-    }
+    ): Long =
+        queries.transactionWithResult {
+            queries.insertPokemon(
+                pokemon_id = pokemonId.toLong(),
+                name = name,
+                sprite_url = spriteUrl,
+                height = height.toLong(),
+                weight = weight.toLong(),
+                fetched_at = fetchedAt,
+            )
+            queries.lastInsertRowId().executeAsOne()
+        }
 
     override fun observeAll(): Flow<List<CachedPokemon>> = queries.selectAllOrderByFetchedAtDesc().asFlow().mapToList(Dispatchers.Default)
 
-    override suspend fun getById(id: Int): CachedPokemon? = queries.selectById(id.toLong()).executeAsOneOrNull()
+    override suspend fun getById(id: Long): CachedPokemon? = queries.selectById(id).executeAsOneOrNull()
 
     override suspend fun deleteAll() {
         queries.deleteAll()

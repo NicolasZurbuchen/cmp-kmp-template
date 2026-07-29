@@ -10,5 +10,5 @@ interface PokemonExplorerRepository {
 
     suspend fun clearHistory()
 
-    suspend fun getById(id: Int): Pokemon?
+    suspend fun getById(historyId: Long): Pokemon?
 }

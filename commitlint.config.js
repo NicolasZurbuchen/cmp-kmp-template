@@ -22,7 +22,6 @@ module.exports = {
       2,
       'always',
       [
-        'sync',
         'network',
         'database',
         'di',

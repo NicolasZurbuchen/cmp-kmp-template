@@ -11,5 +11,5 @@ data object MainDestination : PokemonExplorerDestination
 
 @Serializable
 data class DetailDestination(
-    val id: Int,
+    val historyId: Long,
 ) : PokemonExplorerDestination

@@ -6,8 +6,8 @@ fun MainState.toUiModel(): MainUiModel {
     val items =
         history.map {
             PokemonItemUiModel(
-                id = it.id,
-                numberText = "#" + it.id.toString().padStart(3, '0'),
+                historyId = it.historyId,
+                numberText = "#" + it.speciesId.toString().padStart(3, '0'),
                 name = it.name.replaceFirstChar { char -> char.uppercase() },
                 spriteUrl = it.spriteUrl,
             )

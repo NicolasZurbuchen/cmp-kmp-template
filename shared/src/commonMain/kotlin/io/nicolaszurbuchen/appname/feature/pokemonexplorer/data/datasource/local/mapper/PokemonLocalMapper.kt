@@ -5,7 +5,8 @@ import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.model.Pokemon
 
 fun CachedPokemon.toDomain(): Pokemon =
     Pokemon(
-        id = id.toInt(),
+        historyId = id,
+        speciesId = pokemon_id.toInt(),
         name = name,
         spriteUrl = sprite_url,
         height = height.toInt(),

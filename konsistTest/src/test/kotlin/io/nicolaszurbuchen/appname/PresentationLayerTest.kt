@@ -155,6 +155,7 @@ class PresentationLayerTest {
 
         scope.files
             .withPackage("..presentation.screen..")
+            .filter { file -> !file.hasPackage("..component..") }
             .filter { file -> allowedSuffixes.none { suffix -> file.name.endsWith(suffix) } }
             .assertEmpty()
     }
@@ -164,6 +165,7 @@ class PresentationLayerTest {
         val screenPackages =
             scope.files
                 .withPackage("..presentation.screen..")
+                .filter { file -> !file.hasPackage("..component..") }
                 .groupBy { it.packagee?.name }
 
         screenPackages.forEach { (packageName, files) ->

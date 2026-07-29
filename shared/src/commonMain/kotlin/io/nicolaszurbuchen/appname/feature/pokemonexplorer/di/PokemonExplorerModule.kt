@@ -23,10 +23,12 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import kotlin.random.Random
 
 val pokemonExplorerModule =
     module {
         single { get<AppDatabase>().cachedPokemonQueries }
+        single<Random> { Random.Default }
 
         singleOf(::PokemonApiImpl) bind PokemonApi::class
         singleOf(::PokemonRemoteDataSourceImpl) bind PokemonRemoteDataSource::class
@@ -42,5 +44,5 @@ val pokemonExplorerModule =
         factoryOf(::MainStoreFactory)
         viewModelOf(::MainViewModel)
 
-        viewModel { (id: Int) -> DetailViewModel(DetailStoreFactory(get(), get(), id)) }
+        viewModel { (historyId: Long) -> DetailViewModel(DetailStoreFactory(get(), get(), historyId)) }
     }

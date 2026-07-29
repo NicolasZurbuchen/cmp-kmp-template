@@ -1,5 +1,6 @@
 CREATE TABLE CachedPokemon (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    pokemon_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     sprite_url TEXT NOT NULL,
     height INTEGER NOT NULL,
@@ -8,8 +9,11 @@ CREATE TABLE CachedPokemon (
 );
 
 insertPokemon:
-INSERT OR REPLACE INTO CachedPokemon(id, name, sprite_url, height, weight, fetched_at)
+INSERT INTO CachedPokemon(pokemon_id, name, sprite_url, height, weight, fetched_at)
 VALUES (?, ?, ?, ?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
 
 selectAllOrderByFetchedAtDesc:
 SELECT * FROM CachedPokemon

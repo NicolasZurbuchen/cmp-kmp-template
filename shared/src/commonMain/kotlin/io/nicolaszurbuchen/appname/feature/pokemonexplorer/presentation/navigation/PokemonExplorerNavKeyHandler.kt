@@ -14,13 +14,13 @@ class PokemonExplorerNavKeyHandler(
 ) : NavKeyHandler {
     override fun EntryProviderScope<NavKey>.registerEntries() {
         entry<MainDestination> {
-            MainRoute(onNavigateToDetail = { id -> navigator.navigateToDetail(id) })
+            MainRoute(onNavigateToDetail = { historyId -> navigator.navigateToDetail(historyId) })
         }
 
         entry<DetailDestination> { destination ->
             DetailRoute(
                 onNavigateBack = { navigator.navigateBack() },
-                viewModel = koinViewModel<DetailViewModel>(parameters = { parametersOf(destination.id) }),
+                viewModel = koinViewModel<DetailViewModel>(parameters = { parametersOf(destination.historyId) }),
             )
         }
     }

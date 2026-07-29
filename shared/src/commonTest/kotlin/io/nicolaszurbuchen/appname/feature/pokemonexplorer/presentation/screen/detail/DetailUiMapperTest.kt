@@ -10,7 +10,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class DetailUiMapperTest {
-
     @Test
     fun toUiModel_loadingWithNullPokemon_producesAllNullFields() {
         val state = DetailState(isLoading = true, pokemon = null)

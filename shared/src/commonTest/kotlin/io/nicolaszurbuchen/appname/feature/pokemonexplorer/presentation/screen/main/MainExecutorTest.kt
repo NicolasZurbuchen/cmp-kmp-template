@@ -24,7 +24,6 @@ import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainExecutorTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -51,147 +50,160 @@ class MainExecutorTest {
     // region bootstrap / ObserveHistory
 
     @Test
-    fun onCreate_immediatelyObservesEmptyHistoryFromRepository() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
+    fun onCreate_immediatelyObservesEmptyHistoryFromRepository() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(false, store.state.isLoading)
-        assertEquals(emptyList(), store.state.history)
-    }
+            assertEquals(false, store.state.isLoading)
+            assertEquals(emptyList(), store.state.history)
+        }
 
     @Test
-    fun onCreate_repositoryEmitsHistoryLater_updatesStateReactively() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
-        val items = listOf(samplePokemon())
+    fun onCreate_repositoryEmitsHistoryLater_updatesStateReactively() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
+            val items = listOf(samplePokemon())
 
-        repository.emitHistory(items)
-        testDispatcher.scheduler.runCurrent()
+            repository.emitHistory(items)
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(items, store.state.history)
-    }
+            assertEquals(items, store.state.history)
+        }
 
     // endregion
 
     // region GenerateClicked / RetryClicked
 
     @Test
-    fun generateClicked_success_addsPokemonToHistoryAndClearsLoading() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
+    fun generateClicked_success_addsPokemonToHistoryAndClearsLoading() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
 
-        store.accept(MainIntent.GenerateClicked)
-        testDispatcher.scheduler.runCurrent()
+            store.accept(MainIntent.GenerateClicked)
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(false, store.state.isLoading)
-        assertEquals(null, store.state.error)
-        assertEquals(listOf(repository.fetchRandomPokemonResult), store.state.history)
-    }
-
-    @Test
-    fun generateClicked_repositoryThrowsAppException_setsMappedError() = runTest {
-        val repository = FakePokemonExplorerRepository().apply {
-            fetchRandomPokemonError = AppException(AppError.PokemonExplorer.FetchFailed)
+            assertEquals(false, store.state.isLoading)
+            assertEquals(null, store.state.error)
+            assertEquals(listOf(repository.fetchRandomPokemonResult), store.state.history)
         }
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
-
-        store.accept(MainIntent.GenerateClicked)
-        testDispatcher.scheduler.runCurrent()
-
-        assertEquals(AppError.PokemonExplorer.FetchFailed, store.state.error)
-    }
 
     @Test
-    fun generateClicked_repositoryThrowsGenericException_wrapsInUnexpected() = runTest {
-        val repository = FakePokemonExplorerRepository().apply {
-            fetchRandomPokemonError = RuntimeException("boom")
+    fun generateClicked_repositoryThrowsAppException_setsMappedError() =
+        runTest {
+            val repository =
+                FakePokemonExplorerRepository().apply {
+                    fetchRandomPokemonError = AppException(AppError.PokemonExplorer.FetchFailed)
+                }
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
+
+            store.accept(MainIntent.GenerateClicked)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(AppError.PokemonExplorer.FetchFailed, store.state.error)
         }
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
-
-        store.accept(MainIntent.GenerateClicked)
-        testDispatcher.scheduler.runCurrent()
-
-        assertIs<AppError.Unexpected>(store.state.error)
-    }
 
     @Test
-    fun retryClicked_fetchesANewPokemonJustLikeGenerateClicked() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
+    fun generateClicked_repositoryThrowsGenericException_wrapsInUnexpected() =
+        runTest {
+            val repository =
+                FakePokemonExplorerRepository().apply {
+                    fetchRandomPokemonError = RuntimeException("boom")
+                }
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
 
-        store.accept(MainIntent.RetryClicked)
-        testDispatcher.scheduler.runCurrent()
+            store.accept(MainIntent.GenerateClicked)
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(1, repository.fetchRandomPokemonCallCount)
-    }
+            assertIs<AppError.Unexpected>(store.state.error)
+        }
+
+    @Test
+    fun retryClicked_fetchesANewPokemonJustLikeGenerateClicked() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
+
+            store.accept(MainIntent.RetryClicked)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(1, repository.fetchRandomPokemonCallCount)
+        }
 
     // endregion
 
     // region ItemClicked
 
     @Test
-    fun itemClicked_publishesNavigateToDetailLabelWithHistoryId() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
+    fun itemClicked_publishesNavigateToDetailLabelWithHistoryId() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
 
-        store.labels.test {
-            store.accept(MainIntent.ItemClicked(historyId = 42L))
-            assertEquals(MainLabel.NavigateToDetail(42L), awaitItem())
+            store.labels.test {
+                store.accept(MainIntent.ItemClicked(historyId = 42L))
+                assertEquals(MainLabel.NavigateToDetail(42L), awaitItem())
+            }
         }
-    }
 
     // endregion
 
     // region ClearClicked
 
     @Test
-    fun clearClicked_delegatesToClearHistoryUseCase() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
+    fun clearClicked_delegatesToClearHistoryUseCase() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
 
-        store.accept(MainIntent.ClearClicked)
-        testDispatcher.scheduler.runCurrent()
+            store.accept(MainIntent.ClearClicked)
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(1, repository.clearHistoryCallCount)
-    }
+            assertEquals(1, repository.clearHistoryCallCount)
+        }
 
     // endregion
 
     // region DismissErrorClicked
 
     @Test
-    fun dismissErrorClicked_clearsError() = runTest {
-        val repository = FakePokemonExplorerRepository().apply {
-            fetchRandomPokemonError = RuntimeException("boom")
+    fun dismissErrorClicked_clearsError() =
+        runTest {
+            val repository =
+                FakePokemonExplorerRepository().apply {
+                    fetchRandomPokemonError = RuntimeException("boom")
+                }
+            val store = createStore(repository)
+            testDispatcher.scheduler.runCurrent()
+            store.accept(MainIntent.GenerateClicked)
+            testDispatcher.scheduler.runCurrent()
+
+            store.accept(MainIntent.DismissErrorClicked)
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(null, store.state.error)
         }
-        val store = createStore(repository)
-        testDispatcher.scheduler.runCurrent()
-        store.accept(MainIntent.GenerateClicked)
-        testDispatcher.scheduler.runCurrent()
-
-        store.accept(MainIntent.DismissErrorClicked)
-        testDispatcher.scheduler.runCurrent()
-
-        assertEquals(null, store.state.error)
-    }
 
     // endregion
 
-    private fun samplePokemon() = Pokemon(
-        historyId = 1L,
-        speciesId = 25,
-        name = "pikachu",
-        spriteUrl = "https://example.com/pikachu.png",
-        height = 4,
-        weight = 60,
-        fetchedAt = 1_000L,
-    )
+    private fun samplePokemon() =
+        Pokemon(
+            historyId = 1L,
+            speciesId = 25,
+            name = "pikachu",
+            spriteUrl = "https://example.com/pikachu.png",
+            height = 4,
+            weight = 60,
+            fetchedAt = 1_000L,
+        )
 }

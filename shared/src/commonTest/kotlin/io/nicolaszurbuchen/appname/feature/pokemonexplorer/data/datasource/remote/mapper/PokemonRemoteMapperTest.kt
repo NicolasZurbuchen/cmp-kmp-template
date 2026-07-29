@@ -7,7 +7,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PokemonRemoteMapperTest {
-
     @Test
     fun toDomain_mapsIdToSpeciesIdAndKeepsHistoryIdAndFetchedAtFromParameters() {
         val dto = PokemonDto(id = 25, name = "pikachu", height = 4, weight = 60, sprites = PokemonSpritesDto(frontDefault = "sprite-url"))

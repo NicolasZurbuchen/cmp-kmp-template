@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class MainReducerTest {
-
     private val reducer = MainStoreFactory.ReducerImpl
 
     @Test
@@ -36,9 +35,10 @@ class MainReducerTest {
     fun generationFailed_setsErrorAndClearsLoading() {
         val state = MainState(isLoading = true)
 
-        val result = with(reducer) {
-            state.reduce(MainMessage.GenerationFailed(AppError.Network.Unavailable))
-        }
+        val result =
+            with(reducer) {
+                state.reduce(MainMessage.GenerationFailed(AppError.Network.Unavailable))
+            }
 
         assertEquals(false, result.isLoading)
         assertEquals(AppError.Network.Unavailable, result.error)
@@ -56,13 +56,14 @@ class MainReducerTest {
         assertEquals(history, result.history)
     }
 
-    private fun samplePokemon() = Pokemon(
-        historyId = 1L,
-        speciesId = 25,
-        name = "pikachu",
-        spriteUrl = "https://example.com/pikachu.png",
-        height = 4,
-        weight = 60,
-        fetchedAt = 1_000L,
-    )
+    private fun samplePokemon() =
+        Pokemon(
+            historyId = 1L,
+            speciesId = 25,
+            name = "pikachu",
+            spriteUrl = "https://example.com/pikachu.png",
+            height = 4,
+            weight = 60,
+            fetchedAt = 1_000L,
+        )
 }

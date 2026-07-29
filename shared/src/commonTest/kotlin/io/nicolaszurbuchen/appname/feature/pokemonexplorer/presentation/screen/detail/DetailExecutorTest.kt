@@ -18,7 +18,6 @@ import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailExecutorTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -42,45 +41,49 @@ class DetailExecutorTest {
         ).create()
 
     @Test
-    fun onCreate_loadsPokemonMatchingHistoryId() = runTest {
-        val pokemon = samplePokemon(historyId = 7L)
-        val repository = FakePokemonExplorerRepository().apply { getByIdResults = mapOf(7L to pokemon) }
-        val store = createStore(repository, historyId = 7L)
+    fun onCreate_loadsPokemonMatchingHistoryId() =
+        runTest {
+            val pokemon = samplePokemon(historyId = 7L)
+            val repository = FakePokemonExplorerRepository().apply { getByIdResults = mapOf(7L to pokemon) }
+            val store = createStore(repository, historyId = 7L)
 
-        testDispatcher.scheduler.runCurrent()
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(false, store.state.isLoading)
-        assertEquals(pokemon, store.state.pokemon)
-    }
-
-    @Test
-    fun onCreate_unknownHistoryId_setsNullPokemon() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val store = createStore(repository, historyId = 999L)
-
-        testDispatcher.scheduler.runCurrent()
-
-        assertEquals(false, store.state.isLoading)
-        assertNull(store.state.pokemon)
-    }
+            assertEquals(false, store.state.isLoading)
+            assertEquals(pokemon, store.state.pokemon)
+        }
 
     @Test
-    fun onCreate_requestsPokemonForConstructorHistoryId() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        createStore(repository, historyId = 42L)
+    fun onCreate_unknownHistoryId_setsNullPokemon() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val store = createStore(repository, historyId = 999L)
 
-        testDispatcher.scheduler.runCurrent()
+            testDispatcher.scheduler.runCurrent()
 
-        assertEquals(42L, repository.lastRequestedHistoryId)
-    }
+            assertEquals(false, store.state.isLoading)
+            assertNull(store.state.pokemon)
+        }
 
-    private fun samplePokemon(historyId: Long) = Pokemon(
-        historyId = historyId,
-        speciesId = 25,
-        name = "pikachu",
-        spriteUrl = "https://example.com/pikachu.png",
-        height = 4,
-        weight = 60,
-        fetchedAt = 1_000L,
-    )
+    @Test
+    fun onCreate_requestsPokemonForConstructorHistoryId() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            createStore(repository, historyId = 42L)
+
+            testDispatcher.scheduler.runCurrent()
+
+            assertEquals(42L, repository.lastRequestedHistoryId)
+        }
+
+    private fun samplePokemon(historyId: Long) =
+        Pokemon(
+            historyId = historyId,
+            speciesId = 25,
+            name = "pikachu",
+            spriteUrl = "https://example.com/pikachu.png",
+            height = 4,
+            weight = 60,
+            fetchedAt = 1_000L,
+        )
 }

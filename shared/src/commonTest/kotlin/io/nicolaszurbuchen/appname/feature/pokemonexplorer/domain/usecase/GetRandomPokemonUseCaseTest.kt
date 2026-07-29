@@ -7,23 +7,25 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class GetRandomPokemonUseCaseTest {
-
     @Test
-    fun invoke_delegatesDirectlyToRepository() = runTest {
-        val repository = FakePokemonExplorerRepository()
-        val expected = repository.fetchRandomPokemonResult
-        val useCase = GetRandomPokemonUseCase(repository)
+    fun invoke_delegatesDirectlyToRepository() =
+        runTest {
+            val repository = FakePokemonExplorerRepository()
+            val expected = repository.fetchRandomPokemonResult
+            val useCase = GetRandomPokemonUseCase(repository)
 
-        assertEquals(expected, useCase())
-    }
-
-    @Test
-    fun invoke_repositoryThrows_propagatesException() = runTest {
-        val repository = FakePokemonExplorerRepository().apply {
-            fetchRandomPokemonError = RuntimeException("network down")
+            assertEquals(expected, useCase())
         }
-        val useCase = GetRandomPokemonUseCase(repository)
 
-        assertFailsWith<RuntimeException> { useCase() }
-    }
+    @Test
+    fun invoke_repositoryThrows_propagatesException() =
+        runTest {
+            val repository =
+                FakePokemonExplorerRepository().apply {
+                    fetchRandomPokemonError = RuntimeException("network down")
+                }
+            val useCase = GetRandomPokemonUseCase(repository)
+
+            assertFailsWith<RuntimeException> { useCase() }
+        }
 }

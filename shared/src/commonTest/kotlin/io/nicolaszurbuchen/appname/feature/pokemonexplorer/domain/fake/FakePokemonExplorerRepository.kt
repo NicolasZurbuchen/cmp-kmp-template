@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakePokemonExplorerRepository : PokemonExplorerRepository {
-
     // fetchRandomPokemon
     var fetchRandomPokemonResult: Pokemon = defaultPokemon
     var fetchRandomPokemonError: Throwable? = null
@@ -52,14 +51,15 @@ class FakePokemonExplorerRepository : PokemonExplorerRepository {
     }
 
     companion object {
-        private val defaultPokemon = Pokemon(
-            historyId = 1L,
-            speciesId = 25,
-            name = "pikachu",
-            spriteUrl = "https://example.com/pikachu.png",
-            height = 4,
-            weight = 60,
-            fetchedAt = 1_000L,
-        )
+        private val defaultPokemon =
+            Pokemon(
+                historyId = 1L,
+                speciesId = 25,
+                name = "pikachu",
+                spriteUrl = "https://example.com/pikachu.png",
+                height = 4,
+                weight = 60,
+                fetchedAt = 1_000L,
+            )
     }
 }

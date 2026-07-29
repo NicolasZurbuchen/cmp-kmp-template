@@ -7,12 +7,10 @@ import com.lemonappdev.konsist.api.verify.assertTrue
 import kotlin.test.Test
 
 class TestingTest {
-
     companion object {
         private val scope = Konsist.scopeFromModule("shared")
 
-        private fun hasCorrespondingTestFile(file: KoFileDeclaration): Boolean =
-            scope.files.any { it.name == "${file.name}Test" }
+        private fun hasCorrespondingTestFile(file: KoFileDeclaration): Boolean = scope.files.any { it.name == "${file.name}Test" }
     }
 
     // region mapper coverage

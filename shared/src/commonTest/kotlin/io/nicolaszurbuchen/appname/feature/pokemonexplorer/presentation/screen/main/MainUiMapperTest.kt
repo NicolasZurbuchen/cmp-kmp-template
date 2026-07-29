@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class MainUiMapperTest {
-
     @Test
     fun toUiModel_passesThroughLoadingFlag() {
         val state = MainState(isLoading = true)

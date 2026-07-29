@@ -6,18 +6,18 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PokemonLocalMapperTest {
-
     @Test
     fun toDomain_mapsAllFieldsCorrectly() {
-        val cached = CachedPokemon(
-            id = 7L,
-            pokemon_id = 25L,
-            name = "pikachu",
-            sprite_url = "https://example.com/pikachu.png",
-            height = 4L,
-            weight = 60L,
-            fetched_at = 123456L,
-        )
+        val cached =
+            CachedPokemon(
+                id = 7L,
+                pokemon_id = 25L,
+                name = "pikachu",
+                sprite_url = "https://example.com/pikachu.png",
+                height = 4L,
+                weight = 60L,
+                fetched_at = 123456L,
+            )
 
         val result = cached.toDomain()
 

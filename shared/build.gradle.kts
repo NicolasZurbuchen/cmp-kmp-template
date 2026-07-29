@@ -69,6 +69,9 @@ kotlin {
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.okhttp)
         }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.sqldelight.driver.jdbc.sqlite)
+        }
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
@@ -95,6 +98,8 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.mock)
+            implementation(libs.turbine)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

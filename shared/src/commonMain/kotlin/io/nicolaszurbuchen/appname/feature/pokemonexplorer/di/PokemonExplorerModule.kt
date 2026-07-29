@@ -32,7 +32,7 @@ val pokemonExplorerModule =
         singleOf(::PokemonRemoteDataSourceImpl) bind PokemonRemoteDataSource::class
         singleOf(::PokemonLocalDataSourceImpl) bind PokemonLocalDataSource::class
 
-        singleOf(::PokemonExplorerRepositoryImpl) bind PokemonExplorerRepository::class
+        single<PokemonExplorerRepository> { PokemonExplorerRepositoryImpl(get(), get()) }
 
         factoryOf(::GetRandomPokemonUseCase)
         factoryOf(::ObserveHistoryUseCase)

@@ -30,123 +30,138 @@ val AppTypography
     @Composable get() =
         Typography(
             // Largest numeric/hero display (e.g. a score, a big stat)
-            displayLarge = TextStyle(
-                fontFamily = MonoFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 72.sp,
-                lineHeight = 80.sp,
-                letterSpacing = (-2).sp
-            ),
+            displayLarge =
+                TextStyle(
+                    fontFamily = MonoFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 72.sp,
+                    lineHeight = 80.sp,
+                    letterSpacing = (-2).sp,
+                ),
             // Secondary numeric display (e.g. a step counter, a progress indicator)
-            displayMedium = TextStyle(
-                fontFamily = MonoFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 36.sp,
-                lineHeight = 44.sp,
-                letterSpacing = (-1).sp
-            ),
+            displayMedium =
+                TextStyle(
+                    fontFamily = MonoFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp,
+                    lineHeight = 44.sp,
+                    letterSpacing = (-1).sp,
+                ),
             // Small all-caps section labels
-            displaySmall = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Medium,
-                fontSize = 11.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 2.sp
-            ),
+            displaySmall =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
+                    letterSpacing = 2.sp,
+                ),
             // Screen-level titles
-            headlineLarge = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 32.sp,
-                lineHeight = 40.sp,
-                letterSpacing = (-0.5).sp
-            ),
+            headlineLarge =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp,
+                    lineHeight = 40.sp,
+                    letterSpacing = (-0.5).sp,
+                ),
             // Section headers within a screen
-            headlineMedium = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 13.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 1.5.sp
-            ),
+            headlineMedium =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 1.5.sp,
+                ),
             // Primary content headline (e.g. a question, a card title)
-            headlineSmall = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp,
-                lineHeight = 30.sp,
-                letterSpacing = (-0.3).sp
-            ),
+            headlineSmall =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    lineHeight = 30.sp,
+                    letterSpacing = (-0.3).sp,
+                ),
             // Button labels
-            titleLarge = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 1.sp
-            ),
+            titleLarge =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 1.sp,
+                ),
             // Primary interactive content text (e.g. list item, option text)
-            titleMedium = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                letterSpacing = 0.sp
-            ),
+            titleMedium =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.sp,
+                ),
             // Small labels for grouped stats/categories
-            titleSmall = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 1.sp
-            ),
+            titleSmall =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 1.sp,
+                ),
             // Primary body text
-            bodyLarge = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-                lineHeight = 22.sp,
-                letterSpacing = 0.sp
-            ),
+            bodyLarge =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 15.sp,
+                    lineHeight = 22.sp,
+                    letterSpacing = 0.sp,
+                ),
             // Supporting body text
-            bodyMedium = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 13.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.sp
-            ),
+            bodyMedium =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.sp,
+                ),
             // Captions, metadata
-            bodySmall = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = 11.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 0.3.sp
-            ),
+            bodySmall =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
+                    letterSpacing = 0.3.sp,
+                ),
             // Short mono labels (e.g. option letters, codes)
-            labelLarge = TextStyle(
-                fontFamily = MonoFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 13.sp,
-                lineHeight = 16.sp,
-                letterSpacing = 0.sp
-            ),
+            labelLarge =
+                TextStyle(
+                    fontFamily = MonoFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp,
+                    lineHeight = 16.sp,
+                    letterSpacing = 0.sp,
+                ),
             // Live numeric label (e.g. a counter or timer)
-            labelMedium = TextStyle(
-                fontFamily = MonoFontFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.sp
-            ),
+            labelMedium =
+                TextStyle(
+                    fontFamily = MonoFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.sp,
+                ),
             // Tags, chips
-            labelSmall = TextStyle(
-                fontFamily = PrimaryFontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 10.sp,
-                lineHeight = 14.sp,
-                letterSpacing = 1.sp
-            ),
+            labelSmall =
+                TextStyle(
+                    fontFamily = PrimaryFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 10.sp,
+                    lineHeight = 14.sp,
+                    letterSpacing = 1.sp,
+                ),
         )

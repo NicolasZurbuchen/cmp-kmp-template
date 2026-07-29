@@ -55,7 +55,7 @@ fun AppNameTheme(
         content = {
             CompositionLocalProvider(
                 LocalSpacing provides Spacing(),
-                LocalAppColors provides appColors,
+                LocalAppNameColors provides appColors,
             ) {
                 content()
             }

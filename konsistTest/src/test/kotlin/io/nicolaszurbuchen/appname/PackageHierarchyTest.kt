@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 class PackageHierarchyTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
     @Test // ok
@@ -136,13 +136,14 @@ class PackageHierarchyTest {
     }
 
     @Test // ok
-    fun `Screen name packages must not have child packages`() {
+    fun `Screen name packages must not have child packages other than component`() {
         scope.files
             .filter { file ->
                 file.packagee?.name?.contains(".presentation.screen.") == true
             }
             .assertTrue { file ->
-                file.packagee?.name?.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.presentation\\.screen\\.[^.]+$")) == true
+                file.packagee?.name
+                    ?.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.presentation\\.screen\\.[^.]+(\\.component)?$")) == true
             }
     }
 }

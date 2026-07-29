@@ -11,7 +11,7 @@ import kotlin.test.Test
 
 class DomainLayerTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
     // region file location implies name

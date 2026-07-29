@@ -22,7 +22,6 @@ module.exports = {
       2,
       'always',
       [
-        'sync',
         'network',
         'database',
         'di',
@@ -33,6 +32,7 @@ module.exports = {
         'deps',
         'feature-a',
         'feature-b',
+        'pokemon-explorer',
       ],
     ],
     'scope-empty': [0],

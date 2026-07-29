@@ -1,0 +1,26 @@
+CREATE TABLE CachedPokemon (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    pokemon_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    sprite_url TEXT NOT NULL,
+    height INTEGER NOT NULL,
+    weight INTEGER NOT NULL,
+    fetched_at INTEGER NOT NULL
+);
+
+insertPokemon:
+INSERT INTO CachedPokemon(pokemon_id, name, sprite_url, height, weight, fetched_at)
+VALUES (?, ?, ?, ?, ?, ?);
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+selectAllOrderByFetchedAtDesc:
+SELECT * FROM CachedPokemon
+ORDER BY fetched_at DESC;
+
+selectById:
+SELECT * FROM CachedPokemon WHERE id = ?;
+
+deleteAll:
+DELETE FROM CachedPokemon;

@@ -12,7 +12,7 @@ class AppNameApplication : Application() {
             additionalModules = listOf(platformModule),
             appDeclaration = {
                 androidContext(this@AppNameApplication)
-            }
+            },
         )
     }
 }

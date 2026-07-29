@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 class PresentationLayerTest {
     companion object {
-        private val scope = Konsist.scopeFromModule("shared")
+        private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
     // region Name implies location
@@ -61,8 +61,19 @@ class PresentationLayerTest {
     // region Location implies name
 
     @Test
-    fun `files in screen packages must be suffixed with Contract, Preview, Route, Screen, StoreFactory, or ViewModel`() {
-        val allowedSuffixes = setOf("Contract", "Preview", "Route", "Screen", "StoreFactory", "ViewModel")
+    fun `files in screen packages must use an allowed suffix`() {
+        val allowedSuffixes =
+            setOf(
+                "Contract",
+                "Preview",
+                "Reducer",
+                "Route",
+                "Screen",
+                "StoreFactory",
+                "UiMapper",
+                "UiModel",
+                "ViewModel",
+            )
 
         scope.files
             .withPackage("..presentation.screen..")
@@ -139,10 +150,12 @@ class PresentationLayerTest {
 
     @Test
     fun `screen folders must contain only allowed file names`() {
-        val allowedSuffixes = setOf("Contract", "Preview", "Route", "Screen", "StoreFactory", "ViewModel")
+        val allowedSuffixes =
+            setOf("Contract", "Preview", "Reducer", "Route", "Screen", "StoreFactory", "UiMapper", "UiModel", "ViewModel")
 
         scope.files
             .withPackage("..presentation.screen..")
+            .filter { file -> !file.hasPackage("..component..") }
             .filter { file -> allowedSuffixes.none { suffix -> file.name.endsWith(suffix) } }
             .assertEmpty()
     }
@@ -152,6 +165,7 @@ class PresentationLayerTest {
         val screenPackages =
             scope.files
                 .withPackage("..presentation.screen..")
+                .filter { file -> !file.hasPackage("..component..") }
                 .groupBy { it.packagee?.name }
 
         screenPackages.forEach { (packageName, files) ->
@@ -288,7 +302,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `ViewModel state property must be a StateFlow of the matching State type`() {
+    fun `ViewModel state property must be a StateFlow of the matching State or UiModel type`() {
         scope.files
             .withNameEndingWith("ViewModel")
             .withPackage("..presentation.screen..")
@@ -298,7 +312,9 @@ class PresentationLayerTest {
                 val stateProperty =
                     file.classes().single()
                         .properties().firstOrNull { it.name == "state" }
-                stateProperty == null || stateProperty.type?.name == "StateFlow<${prefix}State>"
+                stateProperty == null ||
+                    stateProperty.type?.name == "StateFlow<${prefix}State>" ||
+                    stateProperty.type?.name == "StateFlow<${prefix}UiModel>"
             }
     }
 
@@ -466,7 +482,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Screen public function parameters must only be Modifier, matching State, or lambdas`() {
+    fun `Screen public function parameters must only be Modifier, matching State or UiModel, or lambdas`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")
@@ -477,13 +493,14 @@ class PresentationLayerTest {
                     .parameters.all { param ->
                         param.type.name == "Modifier" ||
                             param.type.name == "${prefix}State" ||
+                            param.type.name == "${prefix}UiModel" ||
                             param.type.isFunctionType
                     }
             }
     }
 
     @Test // ok
-    fun `Screen State parameter must not have a default value`() {
+    fun `Screen State or UiModel parameter must not have a default value`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")
@@ -492,7 +509,9 @@ class PresentationLayerTest {
                 val stateParam =
                     file.functions()
                         .single { it.isTopLevel && it.hasPublicOrDefaultModifier }
-                        .parameters.firstOrNull { it.type.name == "${prefix}State" }
+                        .parameters.firstOrNull {
+                            it.type.name == "${prefix}State" || it.type.name == "${prefix}UiModel"
+                        }
                 stateParam == null || !stateParam.hasDefaultValue()
             }
     }

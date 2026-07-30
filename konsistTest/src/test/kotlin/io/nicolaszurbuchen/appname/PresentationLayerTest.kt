@@ -188,7 +188,7 @@ class PresentationLayerTest {
 
     // region Route file rules
 
-    @Test // ok
+    @Test
     fun `Route files must contain exactly one declaration and it must be a public function`() {
         scope.files
             .withNameEndingWith("Route")
@@ -199,7 +199,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Route files must contain a function matching the file name`() {
         scope.files
             .withNameEndingWith("Route")
@@ -209,7 +209,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Route public function must be annotated with Composable`() {
         scope.files
             .withNameEndingWith("Route")
@@ -219,7 +219,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Route function parameters must only be lambdas, Modifier, or ViewModel`() {
         scope.files
             .withNameEndingWith("Route")
@@ -237,7 +237,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Route function ViewModel parameter must have a default value`() {
         scope.files
             .withNameEndingWith("Route")
@@ -256,7 +256,7 @@ class PresentationLayerTest {
 
     // region ViewModel file rules
 
-    @Test // ok
+    @Test
     fun `ViewModel files must contain exactly one declaration and it must be a public class`() {
         scope.files
             .withNameEndingWith("ViewModel")
@@ -267,7 +267,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `ViewModel classes must extend ViewModel`() {
         scope.files
             .withNameEndingWith("ViewModel")
@@ -277,7 +277,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `ViewModel classes must have a StoreFactory constructor parameter`() {
         scope.files
             .withNameEndingWith("ViewModel")
@@ -288,7 +288,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `ViewModel state property must be a StateFlow of the matching UiModel type`() {
         scope.files
             .withNameEndingWith("ViewModel")
@@ -303,7 +303,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `ViewModel labels property must be a Flow of the matching Label type`() {
         scope.files
             .withNameEndingWith("ViewModel")
@@ -333,7 +333,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Contract files must contain a Label sealed interface`() {
         scope.files
             .withNameEndingWith("Contract")
@@ -355,7 +355,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Contract files must contain a Message sealed interface`() {
         scope.files
             .withNameEndingWith("Contract")
@@ -366,7 +366,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Contract files must contain a State data class`() {
         scope.files
             .withNameEndingWith("Contract")
@@ -377,7 +377,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `top-level classes in Contract files must be the State data class`() {
         scope.files
             .withNameEndingWith("Contract")
@@ -390,7 +390,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `top-level interfaces in Contract files must be the four MVI sealed interfaces`() {
         scope.files
             .withNameEndingWith("Contract")
@@ -414,7 +414,7 @@ class PresentationLayerTest {
 
     // region Screen file rules
 
-    @Test // ok
+    @Test
     fun `Screen files must contain exactly one public function`() {
         scope.files
             .withNameEndingWith("Screen")
@@ -428,7 +428,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Screen public function must match the file name`() {
         scope.files
             .withNameEndingWith("Screen")
@@ -440,7 +440,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Screen public function must be annotated with Composable`() {
         scope.files
             .withNameEndingWith("Screen")
@@ -452,7 +452,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Screen public function parameters must only be Modifier, matching UiModel, or lambdas`() {
         scope.files
             .withNameEndingWith("Screen")
@@ -469,7 +469,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Screen UiModel parameter must not have a default value`() {
         scope.files
             .withNameEndingWith("Screen")
@@ -488,7 +488,7 @@ class PresentationLayerTest {
 
     // region StoreFactory file rules
 
-    @Test // ok
+    @Test
     fun `StoreFactory classes must contain a create function returning the matching Store type`() {
         scope.files
             .withNameEndingWith("StoreFactory")
@@ -501,7 +501,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `StoreFactory nested ReducerImpl must be internal, not private`() {
         scope.files
             .withNameEndingWith("StoreFactory")
@@ -518,7 +518,7 @@ class PresentationLayerTest {
 
     // region UiMapper file rules
 
-    @Test // ok
+    @Test
     fun `UiMapper files must contain only top-level extension functions`() {
         scope.files
             .withNameEndingWith("UiMapper")
@@ -531,7 +531,7 @@ class PresentationLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `UiMapper functions must map from the matching State to the matching UiModel`() {
         scope.files
             .withNameEndingWith("UiMapper")
@@ -564,7 +564,7 @@ class PresentationLayerTest {
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `presentation layer must not import from data layer`() {
         scope.files
             .withPackage("..presentation..")

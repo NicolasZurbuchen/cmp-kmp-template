@@ -27,42 +27,42 @@ class DataLayerTest {
 
     // region file location implies name
 
-    @Test // ok
+    @Test
     fun `files in data repository package must be suffixed with RepositoryImpl`() {
         scope.files
             .withPackage("..data.repository")
             .assertTrue { it.name.endsWith("RepositoryImpl") }
     }
 
-    @Test // ok
+    @Test
     fun `files in remote datasource package must be suffixed with RemoteDataSource or RemoteDataSourceImpl`() {
         scope.files
             .withPackage("..data.datasource.remote")
             .assertTrue { it.name.endsWith("RemoteDataSource") || it.name.endsWith("RemoteDataSourceImpl") }
     }
 
-    @Test // ok
+    @Test
     fun `files in local datasource package must be suffixed with LocalDataSource or LocalDataSourceImpl`() {
         scope.files
             .withPackage("..data.datasource.local")
             .assertTrue { it.name.endsWith("LocalDataSource") || it.name.endsWith("LocalDataSourceImpl") }
     }
 
-    @Test // ok
+    @Test
     fun `files in remote dto package must be suffixed with Dto`() {
         scope.files
             .withPackage("..data.datasource.remote.dto")
             .assertTrue { it.name.endsWith("Dto") }
     }
 
-    @Test // ok
+    @Test
     fun `files in remote api package must be suffixed with Api or ApiImpl`() {
         scope.files
             .withPackage("..data.datasource.remote.api")
             .assertTrue { it.name.endsWith("Api") || it.name.endsWith("ApiImpl") }
     }
 
-    @Test // ok
+    @Test
     fun `files in remote mapper package must be suffixed with Mapper`() {
         scope.files
             .withPackage("..data.datasource.remote.mapper")
@@ -73,56 +73,56 @@ class DataLayerTest {
 
     // region name implies location
 
-    @Test // ok
+    @Test
     fun `files suffixed with RepositoryImpl must reside in repository package`() {
         scope.files
             .withNameEndingWith("RepositoryImpl")
             .assertTrue { it.hasPackage("..data.repository") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with RemoteDataSource must reside in remote datasource package`() {
         scope.files
             .withNameEndingWith("RemoteDataSource")
             .assertTrue { it.hasPackage("..data.datasource.remote") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with RemoteDataSourceImpl must reside in remote datasource package`() {
         scope.files
             .withNameEndingWith("RemoteDataSourceImpl")
             .assertTrue { it.hasPackage("..data.datasource.remote") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with LocalDataSource must reside in local datasource package`() {
         scope.files
             .withNameEndingWith("LocalDataSource")
             .assertTrue { it.hasPackage("..data.datasource.local") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with LocalDataSourceImpl must reside in local datasource package`() {
         scope.files
             .withNameEndingWith("LocalDataSourceImpl")
             .assertTrue { it.hasPackage("..data.datasource.local") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with Dto must reside in remote dto package`() {
         scope.files
             .withNameEndingWith("Dto")
             .assertTrue { it.hasPackage("..data.datasource.remote.dto") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with Api must reside in remote api package`() {
         scope.files
             .withNameEndingWith("Api")
             .assertTrue { it.hasPackage("..data.datasource.remote.api") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with Mapper must reside in remote mapper package`() {
         scope.files
             .withPackage("..data..")
@@ -144,147 +144,147 @@ class DataLayerTest {
 
     private fun KoInterfaceDeclaration.isPlainInterface() = !hasSealedModifier && !hasFunModifier && hasPublicOrDefaultModifier
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RepositoryImpl must not be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("RepositoryImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RepositoryImpl must not be objects`() {
         scope.objects()
             .withNameEndingWith("RepositoryImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RepositoryImpl must be plain classes`() {
         scope.classes()
             .withNameEndingWith("RepositoryImpl")
             .assertTrue { it.isPlainClass() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSource must not be classes`() {
         scope.classes()
             .withNameEndingWith("RemoteDataSource")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSource must not be objects`() {
         scope.objects()
             .withNameEndingWith("RemoteDataSource")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSource must be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("RemoteDataSource")
             .assertTrue { it.isPlainInterface() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSourceImpl must not be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("RemoteDataSourceImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSourceImpl must not be objects`() {
         scope.objects()
             .withNameEndingWith("RemoteDataSourceImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with RemoteDataSourceImpl must be plain classes`() {
         scope.classes()
             .withNameEndingWith("RemoteDataSourceImpl")
             .assertTrue { it.isPlainClass() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSource must not be classes`() {
         scope.classes()
             .withNameEndingWith("LocalDataSource")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSource must not be objects`() {
         scope.objects()
             .withNameEndingWith("LocalDataSource")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSource must be plain interfaces`() {
         scope.interfaces()
             .withNameEndingWith("LocalDataSource")
             .assertTrue { it.isPlainInterface() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSourceImpl must not be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("LocalDataSourceImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSourceImpl must not be objects`() {
         scope.objects()
             .withNameEndingWith("LocalDataSourceImpl")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with LocalDataSourceImpl must be plain classes`() {
         scope.classes()
             .withNameEndingWith("LocalDataSourceImpl")
             .assertTrue { it.isPlainClass() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Dto must not be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("Dto")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Dto must not be objects`() {
         scope.objects()
             .withNameEndingWith("Dto")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Dto must be data classes`() {
         scope.classes()
             .withNameEndingWith("Dto")
             .assertTrue { it.hasDataModifier }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Api must not be classes`() {
         scope.classes()
             .withNameEndingWith("Api")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Api must not be objects`() {
         scope.objects()
             .withNameEndingWith("Api")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Api must be plain interfaces`() {
         scope.interfaces()
             .withNameEndingWith("Api")
@@ -295,7 +295,7 @@ class DataLayerTest {
 
     // region top-level structure
 
-    @Test // ok
+    @Test
     fun `top-level declaration name must match file name`() {
         scope.files
             .withPackage("..data..")
@@ -310,7 +310,7 @@ class DataLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `files in data layer must contain exactly one top-level declaration`() {
         scope.files
             .withPackage("..data..")
@@ -328,7 +328,7 @@ class DataLayerTest {
 
     // region repository rules
 
-    @Test // ok
+    @Test
     fun `DataSource interfaces must not have default function implementations`() {
         scope.interfaces()
             .withNameEndingWith("DataSource")
@@ -342,14 +342,14 @@ class DataLayerTest {
 
     // region dto rules
 
-    @Test // ok
+    @Test
     fun `Dto classes must not have any function`() {
         scope.classes()
             .withNameEndingWith("Dto")
             .assertTrue { it.numFunctions(includeNested = false) == 0 }
     }
 
-    @Test // ok
+    @Test
     fun `Dto classes must not implement any interface`() {
         scope.classes()
             .withNameEndingWith("Dto")
@@ -360,7 +360,7 @@ class DataLayerTest {
 
     // region mapper rules
 
-    @Test // ok
+    @Test
     fun `Mapper files must not declare classes, interfaces, or objects`() {
         scope.files
             .withPackage("..data..")
@@ -372,7 +372,7 @@ class DataLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Mapper files must contain only top-level extension functions`() {
         scope.files
             .withPackage("..data..")
@@ -381,7 +381,7 @@ class DataLayerTest {
             .assertTrue { it.hasReceiverType() }
     }
 
-    @Test // ok
+    @Test
     fun `Mapper must have at least one public function`() {
         scope.files
             .withPackage("..data..")
@@ -392,7 +392,7 @@ class DataLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Mapper functions must follow toX naming convention`() {
         scope.files
             .withPackage("..data..")
@@ -401,7 +401,7 @@ class DataLayerTest {
             .assertTrue { it.name.matches(Regex("to.*(Domain|Entity|Dto|Value|Enum)$")) }
     }
 
-    @Test // ok
+    @Test
     fun `Mapper functions must not map Dto to Dto`() {
         scope.files
             .withPackage("..data..")
@@ -415,7 +415,7 @@ class DataLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Mapper functions must not map Entity to Entity`() {
         scope.files
             .withPackage("..data..")
@@ -433,7 +433,7 @@ class DataLayerTest {
 
     // region implementation contracts
 
-    @Test // ok
+    @Test
     fun `classes suffixed with RepositoryImpl must implement interface from same feature domain repository`() {
         scope.classes()
             .withNameEndingWith("RepositoryImpl")
@@ -447,14 +447,14 @@ class DataLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `classes suffixed with RemoteDataSourceImpl must implement their RemoteDataSource interface`() {
         scope.classes()
             .withNameEndingWith("RemoteDataSourceImpl")
             .assertTrue { it.hasParentWithName(it.name.removeSuffix("Impl")) }
     }
 
-    @Test // ok
+    @Test
     fun `classes suffixed with LocalDataSourceImpl must implement their LocalDataSource interface`() {
         scope.classes()
             .withNameEndingWith("LocalDataSourceImpl")
@@ -465,7 +465,7 @@ class DataLayerTest {
 
     // region dependency boundaries
 
-    @Test // ok
+    @Test
     fun `project types injected into data layer classes must respect feature boundaries`() {
         val projectPackagePrefix = "io.nicolaszurbuchen.appname"
         val classesToCheck =
@@ -547,7 +547,7 @@ class DataLayerTest {
         }
     }
 
-    @Test // ok
+    @Test
     fun `RemoteDataSource functions must only return Dto or Unit`() {
         scope.interfaces()
             .withNameEndingWith("RemoteDataSource")
@@ -555,7 +555,7 @@ class DataLayerTest {
             .assertTrue { isAllowedReturnType(it, allowedProjectSuffix = "dto", allowUnresolvedTypes = true) }
     }
 
-    @Test // ok
+    @Test
     fun `data layer must not import from presentation layer`() {
         scope.files
             .withPackage("..data..")
@@ -566,7 +566,7 @@ class DataLayerTest {
 
     // region public surface
 
-    @Test // ok
+    @Test
     fun `public functions in data layer implementations must be interface overrides`() {
         scope.classes()
             .filter { it.name.endsWith("RepositoryImpl") || it.name.endsWith("DataSourceImpl") }

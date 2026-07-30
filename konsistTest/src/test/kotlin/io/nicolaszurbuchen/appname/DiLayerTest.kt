@@ -20,7 +20,7 @@ class DiLayerTest {
 
     // region Package conventions
 
-    @Test // ok
+    @Test
     fun `files in di package must be suffixed with Module`() {
         scope.files
             .withPackage("..di..")
@@ -28,7 +28,7 @@ class DiLayerTest {
             .assertTrue { it.name.endsWith("Module") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with Module must reside in di package`() {
         scope.files
             .withNameEndingWith("Module")
@@ -40,7 +40,7 @@ class DiLayerTest {
 
     // region Dependency boundaries
 
-    @Test // ok
+    @Test
     fun `di modules must only import from their own subtree`() {
         scope.files
             .withPackage("..di..")

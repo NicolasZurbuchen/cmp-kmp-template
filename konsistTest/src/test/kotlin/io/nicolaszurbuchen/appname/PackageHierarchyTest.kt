@@ -9,7 +9,7 @@ class PackageHierarchyTest {
         private val scope = Konsist.scopeFromProduction(moduleName = "shared")
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of feature or common must be in allowed list`() {
         val allowed = listOf("presentation", "domain", "data", "di")
 
@@ -21,7 +21,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of presentation must be in allowed list`() {
         val allowed = listOf("screen", "component", "navigation", "uimodel", "flow")
 
@@ -33,7 +33,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of domain must be in allowed list`() {
         val allowed = listOf("model", "repository", "usecase", "validation")
 
@@ -45,7 +45,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of data must be in allowed list`() {
         val allowed = listOf("repository", "datasource")
 
@@ -57,7 +57,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of data datasource must be in allowed list`() {
         val allowed = listOf("remote", "local")
 
@@ -69,7 +69,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of data datasource remote must be in allowed list`() {
         val allowed = listOf("api", "dto", "mapper")
 
@@ -81,7 +81,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Direct children of data datasource local must be in allowed list`() {
         val allowed = listOf("entity", "mapper")
 
@@ -93,7 +93,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Top level packages must be in allowed list`() {
         val allowed = listOf("app", "common", "feature", "infra")
 
@@ -117,7 +117,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Leaf packages must not have child packages`() {
         val leafPackageNames =
             setOf("api", "cache", "component", "di", "dto", "flow", "mapper", "model", "navigation", "repository", "usecase", "uimodel")
@@ -135,7 +135,7 @@ class PackageHierarchyTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `Screen name packages must not have child packages other than component`() {
         scope.files
             .filter { file ->

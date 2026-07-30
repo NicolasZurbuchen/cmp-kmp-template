@@ -16,14 +16,14 @@ class DomainLayerTest {
 
     // region file location implies name
 
-    @Test // ok
+    @Test
     fun `files in domain usecase package must be suffixed with UseCase`() {
         scope.files
             .withPackage("..domain.usecase")
             .assertTrue { it.name.endsWith("UseCase") }
     }
 
-    @Test // ok
+    @Test
     fun `files in domain repository package must be suffixed with Repository`() {
         scope.files
             .withPackage("..domain.repository")
@@ -34,14 +34,14 @@ class DomainLayerTest {
 
     // region name implies location
 
-    @Test // ok
+    @Test
     fun `files suffixed with UseCase must reside in domain usecase package`() {
         scope.files
             .withNameEndingWith("UseCase")
             .assertTrue { it.hasPackage("..domain.usecase") }
     }
 
-    @Test // ok
+    @Test
     fun `files suffixed with Repository must reside in domain repository package`() {
         scope.files
             .withNameEndingWith("Repository")
@@ -62,56 +62,56 @@ class DomainLayerTest {
 
     private fun KoInterfaceDeclaration.isPlainInterface() = !hasSealedModifier && !hasFunModifier && hasPublicOrDefaultModifier
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with UseCase must not be interfaces`() {
         scope.interfaces()
             .withNameEndingWith("UseCase")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with UseCase must not be objects`() {
         scope.objects()
             .withNameEndingWith("UseCase")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with UseCase must be plain classes`() {
         scope.classes()
             .withNameEndingWith("UseCase")
             .assertTrue { it.isPlainClass() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Repository must not be classes`() {
         scope.classes()
             .withNameEndingWith("Repository")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Repository must not be objects`() {
         scope.objects()
             .withNameEndingWith("Repository")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations suffixed with Repository must be plain interfaces`() {
         scope.interfaces()
             .withNameEndingWith("Repository")
             .assertTrue { it.isPlainInterface() }
     }
 
-    @Test // ok
+    @Test
     fun `declarations in domain model package must not be interfaces`() {
         scope.interfaces()
             .withPackage("..domain.model")
             .assertEmpty()
     }
 
-    @Test // ok
+    @Test
     fun `declarations in domain model package must be data, sealed, or enum classes`() {
         scope.classes(includeNested = false)
             .withPackage("..domain.model")
@@ -122,7 +122,7 @@ class DomainLayerTest {
 
     // region top-level structure
 
-    @Test // ok
+    @Test
     fun `top-level declaration name must match file name`() {
         scope.files
             .withPackage("..domain..")
@@ -136,7 +136,7 @@ class DomainLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `files in domain layer must contain exactly one top-level declaration`() {
         scope.files
             .withPackage("..domain..")
@@ -153,7 +153,7 @@ class DomainLayerTest {
 
     // region usecase rules
 
-    @Test // ok
+    @Test
     fun `UseCase classes must declare exactly one public function named invoke`() {
         scope.classes()
             .withNameEndingWith("UseCase")
@@ -165,7 +165,7 @@ class DomainLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `UseCase classes must not inject other UseCases`() {
         scope.classes()
             .withNameEndingWith("UseCase")
@@ -180,7 +180,7 @@ class DomainLayerTest {
 
     // region repository rules
 
-    @Test // ok
+    @Test
     fun `Repository interfaces must not have default function implementations`() {
         scope.interfaces()
             .withNameEndingWith("Repository")
@@ -194,7 +194,7 @@ class DomainLayerTest {
 
     // region dependency boundaries
 
-    @Test // ok
+    @Test
     fun `project types injected into domain layer classes must respect feature boundaries`() {
         val projectPackagePrefix = "io.nicolaszurbuchen.appname"
 
@@ -235,14 +235,14 @@ class DomainLayerTest {
             }
     }
 
-    @Test // ok
+    @Test
     fun `domain layer must not import from data layer`() {
         scope.files
             .withPackage("..domain..")
             .assertTrue { !it.hasImportWithName("..data..") }
     }
 
-    @Test // ok
+    @Test
     fun `domain layer must not import from presentation layer`() {
         scope.files
             .withPackage("..domain..")

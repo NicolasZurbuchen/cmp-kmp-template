@@ -10,6 +10,18 @@ import kotlin.test.Test
 class PresentationLayerTest {
     companion object {
         private val scope = Konsist.scopeFromProduction(moduleName = "shared")
+
+        private val screenFileSuffixes =
+            setOf(
+                "Contract",
+                "Preview",
+                "Route",
+                "Screen",
+                "StoreFactory",
+                "UiMapper",
+                "UiModel",
+                "ViewModel",
+            )
     }
 
     // region Name implies location
@@ -62,23 +74,10 @@ class PresentationLayerTest {
 
     @Test
     fun `files in screen packages must use an allowed suffix`() {
-        val allowedSuffixes =
-            setOf(
-                "Contract",
-                "Preview",
-                "Reducer",
-                "Route",
-                "Screen",
-                "StoreFactory",
-                "UiMapper",
-                "UiModel",
-                "ViewModel",
-            )
-
         scope.files
             .withPackage("..presentation.screen..")
             .filter { file -> !file.hasPackage("..component..") }
-            .assertTrue { file -> allowedSuffixes.any { suffix -> file.name.endsWith(suffix) } }
+            .assertTrue { file -> screenFileSuffixes.any { suffix -> file.name.endsWith(suffix) } }
     }
 
     // endregion
@@ -147,18 +146,6 @@ class PresentationLayerTest {
     // endregion
 
     // region Screen subfolder rules
-
-    @Test
-    fun `screen folders must contain only allowed file names`() {
-        val allowedSuffixes =
-            setOf("Contract", "Preview", "Reducer", "Route", "Screen", "StoreFactory", "UiMapper", "UiModel", "ViewModel")
-
-        scope.files
-            .withPackage("..presentation.screen..")
-            .filter { file -> !file.hasPackage("..component..") }
-            .filter { file -> allowedSuffixes.none { suffix -> file.name.endsWith(suffix) } }
-            .assertEmpty()
-    }
 
     @Test
     fun `screen folders must contain Route and Screen`() {
@@ -302,7 +289,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `ViewModel state property must be a StateFlow of the matching State or UiModel type`() {
+    fun `ViewModel state property must be a StateFlow of the matching UiModel type`() {
         scope.files
             .withNameEndingWith("ViewModel")
             .withPackage("..presentation.screen..")
@@ -312,9 +299,7 @@ class PresentationLayerTest {
                 val stateProperty =
                     file.classes().single()
                         .properties().firstOrNull { it.name == "state" }
-                stateProperty == null ||
-                    stateProperty.type?.name == "StateFlow<${prefix}State>" ||
-                    stateProperty.type?.name == "StateFlow<${prefix}UiModel>"
+                stateProperty == null || stateProperty.type?.name == "StateFlow<${prefix}UiModel>"
             }
     }
 
@@ -393,19 +378,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Ui model classes in Contract files must be data classes`() {
-        scope.files
-            .withNameEndingWith("Contract")
-            .withPackage("..presentation.screen..")
-            .assertTrue { file ->
-                file.classes()
-                    .filter { it.name.endsWith("Ui") }
-                    .all { it.hasDataModifier }
-            }
-    }
-
-    @Test // ok
-    fun `top-level classes in Contract files must be State or Ui models`() {
+    fun `top-level classes in Contract files must be the State data class`() {
         scope.files
             .withNameEndingWith("Contract")
             .withPackage("..presentation.screen..")
@@ -413,9 +386,7 @@ class PresentationLayerTest {
                 val prefix = file.name.removeSuffix("Contract")
                 file.classes()
                     .filter { it.isTopLevel }
-                    .all { cls ->
-                        cls.name == "${prefix}State" || cls.name.endsWith("Ui")
-                    }
+                    .all { cls -> cls.name == "${prefix}State" }
             }
     }
 
@@ -482,7 +453,7 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Screen public function parameters must only be Modifier, matching State or UiModel, or lambdas`() {
+    fun `Screen public function parameters must only be Modifier, matching UiModel, or lambdas`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")
@@ -492,7 +463,6 @@ class PresentationLayerTest {
                     .single { it.isTopLevel && it.hasPublicOrDefaultModifier }
                     .parameters.all { param ->
                         param.type.name == "Modifier" ||
-                            param.type.name == "${prefix}State" ||
                             param.type.name == "${prefix}UiModel" ||
                             param.type.isFunctionType
                     }
@@ -500,19 +470,78 @@ class PresentationLayerTest {
     }
 
     @Test // ok
-    fun `Screen State or UiModel parameter must not have a default value`() {
+    fun `Screen UiModel parameter must not have a default value`() {
         scope.files
             .withNameEndingWith("Screen")
             .withPackage("..presentation.screen..")
             .assertTrue { file ->
                 val prefix = file.name.removeSuffix("Screen")
-                val stateParam =
+                val uiModelParam =
                     file.functions()
                         .single { it.isTopLevel && it.hasPublicOrDefaultModifier }
-                        .parameters.firstOrNull {
-                            it.type.name == "${prefix}State" || it.type.name == "${prefix}UiModel"
-                        }
-                stateParam == null || !stateParam.hasDefaultValue()
+                        .parameters.firstOrNull { it.type.name == "${prefix}UiModel" }
+                uiModelParam == null || !uiModelParam.hasDefaultValue()
+            }
+    }
+
+    // endregion
+
+    // region StoreFactory file rules
+
+    @Test // ok
+    fun `StoreFactory classes must contain a create function returning the matching Store type`() {
+        scope.files
+            .withNameEndingWith("StoreFactory")
+            .withPackage("..presentation.screen..")
+            .assertTrue { file ->
+                val prefix = file.name.removeSuffix("StoreFactory")
+                file.classes().single { it.isTopLevel }
+                    .functions(includeNested = false)
+                    .any { it.name == "create" && it.returnType?.name == "${prefix}Store" }
+            }
+    }
+
+    @Test // ok
+    fun `StoreFactory nested ReducerImpl must be internal, not private`() {
+        scope.files
+            .withNameEndingWith("StoreFactory")
+            .withPackage("..presentation.screen..")
+            .assertTrue { file ->
+                file.classes().single { it.isTopLevel }
+                    .objects(includeNested = true)
+                    .filter { it.name == "ReducerImpl" }
+                    .all { it.hasInternalModifier }
+            }
+    }
+
+    // endregion
+
+    // region UiMapper file rules
+
+    @Test // ok
+    fun `UiMapper files must contain only top-level extension functions`() {
+        scope.files
+            .withNameEndingWith("UiMapper")
+            .withPackage("..presentation.screen..")
+            .assertTrue { file ->
+                file.classes(includeNested = true).isEmpty() &&
+                    file.interfaces(includeNested = true).isEmpty() &&
+                    file.objects(includeNested = true).isEmpty() &&
+                    file.functions(includeNested = false).all { it.hasReceiverType() }
+            }
+    }
+
+    @Test // ok
+    fun `UiMapper functions must map from the matching State to the matching UiModel`() {
+        scope.files
+            .withNameEndingWith("UiMapper")
+            .withPackage("..presentation.screen..")
+            .assertTrue { file ->
+                val prefix = file.name.removeSuffix("UiMapper")
+                file.functions(includeNested = false).all { function ->
+                    function.receiverType?.name == "${prefix}State" &&
+                        function.returnType?.name == "${prefix}UiModel"
+                }
             }
     }
 

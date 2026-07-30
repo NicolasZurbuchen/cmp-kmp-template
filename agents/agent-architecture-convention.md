@@ -13,6 +13,33 @@ Walk this in order for any new file:
 
 Don't place something in `common/` speculatively because it *might* be reused later. A single-feature project has almost nothing there — wait until a second feature actually needs the same domain concept before promoting it out of the first one.
 
+## Shape of `app/`, `common/`, and `infra/`
+
+```
+app/
+├── App.kt                       # Root Composable: theme + image loader + NavGraph
+├── design/
+│   ├── component/               # App-wide reusable composables (e.g. AppErrorBanner) — cross-screen only; a single-screen composable belongs in feature/<name>/presentation/screen/<screen>/component/ instead
+│   └── theme/                   # Design tokens, color palette, spacing, typography — see agent-design-system-convention.md
+├── di/
+│   └── AppModule.kt             # Aggregates every feature/infra Koin module into one list — the only DI file allowed to know about more than one feature
+└── navigation/
+    ├── impl/                    # Concrete *NavigatorImpl classes — the only place allowed to know about more than one feature's destinations at once
+    ├── NavConfig.kt
+    └── NavigationModule.kt
+
+common/
+└── error/                       # AppError / AppException, single throw-catch mechanism — a single-feature project has little else here; it only grows when a second feature needs to share the same domain concept as the first
+
+infra/
+├── database/                    # SQLDelight driver setup (expect/actual)
+├── mvi/                         # MVIKotlin base wiring (StoreFactory binding)
+├── navigation/                  # AppNavigator, NavKeyHandler, NavGraph — feature-agnostic, zero feature imports
+├── network/                     # Ktor client configuration (expect/actual engine)
+├── platform/                    # expect/actual platform utilities (BackHandler, Platform)
+└── ui/                          # UiText — resource/raw/composite text abstraction
+```
+
 ## Layer shape inside a feature
 
 ```

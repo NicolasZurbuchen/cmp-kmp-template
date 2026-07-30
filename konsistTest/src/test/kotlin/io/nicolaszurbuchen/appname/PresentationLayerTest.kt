@@ -547,6 +547,21 @@ class PresentationLayerTest {
 
     // endregion
 
+    // region State/UiModel boundary
+
+    @Test
+    fun `files with a Composable function must not import any State type`() {
+        scope.files
+            .filter { file -> file.functions().any { it.hasAnnotationWithName("Composable") } }
+            .assertTrue { file ->
+                file.imports.none { import ->
+                    import.name.contains(".presentation.") && import.name.substringAfterLast(".").endsWith("State")
+                }
+            }
+    }
+
+    // endregion
+
     // region Dependency boundaries
 
     @Test

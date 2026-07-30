@@ -143,6 +143,6 @@ For the full deterministic `type`/`scope` decision procedure (not just the forma
 
 ## 🧑‍💻 Author
 
-**Nicolas Zurbuchen**
-Android Software Engineer based in Tokyo, Japan
+**Nicolas Zurbuchen**  
+Android Software Engineer based in Tokyo, Japan  
 Contact: [nicolas.zurbuchen@outlook.com](mailto:nicolas.zurbuchen@outlook.com)

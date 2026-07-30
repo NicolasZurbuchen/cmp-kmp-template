@@ -83,7 +83,8 @@ class MainStoreFactory(
         }
     }
 
-    private object ReducerImpl : Reducer<MainState, MainMessage> {
+    // internal (not private) so MainReducerTest can exercise it directly
+    internal object ReducerImpl : Reducer<MainState, MainMessage> {
         override fun MainState.reduce(msg: MainMessage): MainState =
             when (msg) {
                 MainMessage.GenerationStarted -> copy(isLoading = true, error = null)

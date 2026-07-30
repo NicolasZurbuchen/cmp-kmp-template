@@ -55,7 +55,8 @@ class DetailStoreFactory(
         }
     }
 
-    private object ReducerImpl : Reducer<DetailState, DetailMessage> {
+    // internal (not private) so DetailReducerTest can exercise it directly
+    internal object ReducerImpl : Reducer<DetailState, DetailMessage> {
         override fun DetailState.reduce(msg: DetailMessage): DetailState =
             when (msg) {
                 is DetailMessage.PokemonLoaded -> copy(isLoading = false, pokemon = msg.pokemon)

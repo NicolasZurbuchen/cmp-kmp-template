@@ -69,32 +69,31 @@ kotlin {
             implementation(libs.ktor.client.android)
             implementation(libs.ktor.client.okhttp)
         }
+        getByName("androidHostTest").dependencies {
+            implementation(libs.sqldelight.driver.jdbc.sqlite)
+        }
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.viewmodel.navigation3)
             implementation(libs.bundles.ktor.common)
+            implementation(libs.bundles.compose.common)
+            implementation(libs.bundles.mvikotlin.common)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
             implementation(libs.compose.components.resources)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
             implementation(libs.compose.material.icons.extended)
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.uiToolingPreview)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.mvikotlin)
-            implementation(libs.mvikotlin.main)
-            implementation(libs.mvikotlin.extensions.coroutines)
             implementation(libs.navigation3.ui)
             implementation(libs.sqldelight.coroutines)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.mock)
+            implementation(libs.turbine)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -2,6 +2,8 @@ package io.nicolaszurbuchen.appname
 
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
+import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
+import com.lemonappdev.konsist.api.ext.list.withPackage
 import com.lemonappdev.konsist.api.ext.list.withSourceSet
 import com.lemonappdev.konsist.api.verify.assertTrue
 import kotlin.test.Test
@@ -9,24 +11,57 @@ import kotlin.test.Test
 class TestingTest {
     companion object {
         private val scope = Konsist.scopeFromModule("shared")
-
-        private fun hasCorrespondingTestFile(file: KoFileDeclaration): Boolean = scope.files.any { it.name == "${file.name}Test" }
     }
 
-    // region mapper coverage
+    private fun KoFileDeclaration.hasCorrespondingTestFile(): Boolean = scope.files.any { it.name == "${name}Test" }
+
+    // region test coverage
 
     @Test
     fun `every mapper file has a corresponding test file`() {
         scope.files
-            .filter { it.resideInPath("..mapper..") && it.name.endsWith("Mapper") }
-            .assertTrue { mapperFile -> hasCorrespondingTestFile(mapperFile) }
+            .withPackage("..mapper..")
+            .withNameEndingWith("Mapper")
+            .assertTrue { it.hasCorrespondingTestFile() }
     }
 
     @Test
-    fun `every RepositoryImpl and DataSourceImpl file has a corresponding test file`() {
+    fun `every RepositoryImpl file has a corresponding test file`() {
         scope.files
-            .filter { it.name.endsWith("RepositoryImpl") || it.name.endsWith("DataSourceImpl") }
-            .assertTrue { implFile -> hasCorrespondingTestFile(implFile) }
+            .withNameEndingWith("RepositoryImpl")
+            .assertTrue { it.hasCorrespondingTestFile() }
+    }
+
+    @Test
+    fun `every DataSourceImpl file has a corresponding test file`() {
+        scope.files
+            .withNameEndingWith("DataSourceImpl")
+            .assertTrue { it.hasCorrespondingTestFile() }
+    }
+
+    @Test
+    fun `every UseCase file has a corresponding test file`() {
+        scope.files
+            .withNameEndingWith("UseCase")
+            .assertTrue { it.hasCorrespondingTestFile() }
+    }
+
+    @Test
+    fun `every UiMapper file has a corresponding test file`() {
+        scope.files
+            .withNameEndingWith("UiMapper")
+            .assertTrue { it.hasCorrespondingTestFile() }
+    }
+
+    @Test
+    fun `every StoreFactory file has a corresponding ReducerTest and ExecutorTest`() {
+        scope.files
+            .withNameEndingWith("StoreFactory")
+            .assertTrue { file ->
+                val prefix = file.name.removeSuffix("StoreFactory")
+                scope.files.any { it.name == "${prefix}ReducerTest" } &&
+                    scope.files.any { it.name == "${prefix}ExecutorTest" }
+            }
     }
 
     // endregion
@@ -36,13 +71,12 @@ class TestingTest {
     @Test
     fun `test files reside in commonTest or androidHostTest mirroring their subject's package`() {
         scope.files
-            .filter { it.name.endsWith("Test") }
+            .withNameEndingWith("Test")
             .assertTrue { testFile ->
                 (testFile.resideInSourceSet("commonTest") || testFile.resideInSourceSet("androidHostTest")) &&
-                    scope.files.any {
-                        it.resideInSourceSet("commonMain") &&
-                            it.packagee?.name == testFile.packagee?.name
-                    }
+                    scope.files
+                        .withSourceSet("commonMain")
+                        .any { it.packagee?.name == testFile.packagee?.name }
             }
     }
 

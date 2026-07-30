@@ -1,6 +1,6 @@
-# AppName
+# cmp-kmp-template
 
-**AppName** is a Kotlin Multiplatform / Compose Multiplatform application template targeting Android and iOS. It ships with one complete, fully-tested example feature — **pokemon-explorer** (fetch a random Pokémon, browse fetch history, view detail) — built against the public [PokéAPI](https://pokeapi.co/), which exists purely to demonstrate every architectural convention end to end: data/domain/presentation layering, MVI, DI wiring, navigation, error handling, and a full unit + architecture test suite.
+A Kotlin Multiplatform / Compose Multiplatform application template targeting Android and iOS. (`AppName` is the internal placeholder project/package name used throughout the code — not this repository's name — and gets renamed to your real project's name when you fork it; see the Forking Checklist in [CLAUDE.md](CLAUDE.md).) It ships with one complete, fully-tested example feature — **pokemon-explorer** (fetch a random Pokémon, browse fetch history, view detail) — built against the public [PokéAPI](https://pokeapi.co/), which exists purely to demonstrate every architectural convention end to end: data/domain/presentation layering, MVI, DI wiring, navigation, error handling, and a full unit + architecture test suite.
 
 The primary goal of this repository is **not the example app** — it is a living template. Every decision is deliberate and codified, with a strict separation between MVI state, domain models, and render targets enforced at compile-test time via Konsist. See [CLAUDE.md](CLAUDE.md) for the full checklist of what to change when you fork this into your own project.
 

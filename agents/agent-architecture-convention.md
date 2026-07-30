@@ -19,7 +19,7 @@ Don't place something in `common/` speculatively because it *might* be reused la
 app/
 ├── App.kt                       # Root Composable: theme + image loader + NavGraph
 ├── design/
-│   ├── component/               # App-wide reusable composables (e.g. AppErrorBanner) — cross-screen only; a single-screen composable belongs in feature/<name>/presentation/screen/<screen>/component/ instead
+│   ├── component/               # App-wide reusable composables (e.g. AppErrorBanner) — cross-feature; a component shared only within one feature belongs in feature/<name>/presentation/component/ instead, and one used by only a single screen belongs in feature/<name>/presentation/screen/<screen>/component/
 │   └── theme/                   # Design tokens, color palette, spacing, typography — see agent-design-system-convention.md
 ├── di/
 │   └── AppModule.kt             # Aggregates every feature/infra Koin module into one list — the only DI file allowed to know about more than one feature
@@ -45,7 +45,9 @@ infra/
 ```
 feature/<name>/
 ├── data/
-│   ├── datasource/{local,remote}/    # Impl always paired with an interface; a mapper/ subfolder holds only top-level extension functions
+│   ├── datasource/
+│   │   ├── local/                    # *LocalDataSource(Impl); a mapper/ subfolder holds only top-level extension functions mapping the local storage type to a domain model
+│   │   └── remote/                   # *RemoteDataSource(Impl); an api/ subfolder holds the Ktor *Api(Impl), a dto/ subfolder the wire-format *Dto classes, and a mapper/ subfolder the top-level extension functions mapping Dto -> domain model
 │   ├── repository/                   # *RepositoryImpl only, implements the domain interface
 │   └── di/
 ├── domain/
@@ -54,6 +56,7 @@ feature/<name>/
 │   └── usecase/                      # reserved for logic that touches a port (repository, clock) or coordinates more than one step; a UseCase never injects another UseCase
 └── presentation/
     ├── navigation/                   # *Destination, *Navigator (interface), *NavKeyHandler — a feature only ever knows its own destinations
+    ├── component/                    # composables reused across screens *within this feature only*; take a UiModel, never raw primitives. Cross-feature reuse goes in app/design/component/ instead
     └── screen/<screen>/
         ├── *Contract.kt              # exactly Intent/Label/Action/Message (sealed interfaces) + State (data class) — nothing else lives here
         ├── *StoreFactory.kt          # Bootstrapper + Executor + a nested `internal object ReducerImpl` — never a standalone *Reducer.kt file, never `private` (internal is what makes it directly unit-testable from commonTest)
@@ -61,7 +64,7 @@ feature/<name>/
         ├── *UiModel.kt                # the Composable's actual input type — no domain types as field types
         ├── *ViewModel.kt              # wraps the StoreFactory; exposes `state: StateFlow<*UiModel>` and `labels: Flow<*Label>` — never State
         ├── *Route.kt / *Screen.kt     # the Screen's public function takes only Modifier, the matching *UiModel, or lambdas — never *State
-        └── component/                 # composables reused only within this screen; take a UiModel, never raw primitives. Something reused across screens goes in app/design/component/ instead
+        └── component/                 # composables reused only within this screen; take a UiModel, never raw primitives
 ```
 
 ## MVI vocabulary

@@ -105,6 +105,29 @@ For the full, precise rule set — the decision procedure for where a new file g
 
 ## Setup & Commit Conventions
 
+### Windows: enable long paths before you clone
+
+The package depth here (`feature/<name>/data/datasource/local/mapper/`) under a reverse-domain package name goes past Windows' 260-character path limit, and `git clone` fails part-way through the checkout:
+
+```
+error: unable to create file shared/src/.../PokemonLocalDataSourceImpl.kt: Filename too long
+fatal: unable to checkout working tree
+```
+
+Set this once, globally, **before** cloning:
+
+```bash
+git config --global core.longpaths true
+```
+
+If you already have a half-checked-out clone, you do not need to start over. Enable the setting, then finish the checkout in place:
+
+```bash
+git restore --source=HEAD :/
+```
+
+Cloning into a short root (`C:\dev\my-app` rather than a deep folder under `Documents`) gives you more headroom for the same reason.
+
 This project uses **Husky** and **Commitlint** to enforce [Conventional Commits](https://www.conventionalcommits.org/) at commit time. After forking or cloning, install the Node tooling once ([Node.js](https://nodejs.org/) required) to activate the Git hooks:
 
 ```bash

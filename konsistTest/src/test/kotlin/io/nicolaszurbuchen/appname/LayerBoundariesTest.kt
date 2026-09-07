@@ -29,11 +29,10 @@ class LayerBoundariesTest {
     }
 
     @Test
-    fun `infra should not depend on features except for root di and navigation`() {
+    fun `infra should not depend on features`() {
         Konsist.scopeFromProject()
             .files
             .filter { it.hasPackage("..infra..") }
-            .filterNot { it.name.contains("AppModule") || it.name.contains("NavGraph") }
             .assertFalse {
                 it.imports.any { import -> import.name.contains(".feature.") }
             }

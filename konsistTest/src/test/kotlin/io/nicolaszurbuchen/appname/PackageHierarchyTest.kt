@@ -23,7 +23,7 @@ class PackageHierarchyTest {
 
     @Test
     fun `Direct children of presentation must be in allowed list`() {
-        val allowed = listOf("screen", "component", "navigation", "uimodel", "flow")
+        val allowed = listOf("screen", "component", "navigation", "uimodel")
 
         scope.packages
             .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.presentation\\.[^.]+$")) }
@@ -35,7 +35,7 @@ class PackageHierarchyTest {
 
     @Test
     fun `Direct children of domain must be in allowed list`() {
-        val allowed = listOf("model", "repository", "usecase", "validation")
+        val allowed = listOf("model", "repository", "usecase")
 
         scope.packages
             .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.domain\\.[^.]+$")) }
@@ -83,7 +83,7 @@ class PackageHierarchyTest {
 
     @Test
     fun `Direct children of data datasource local must be in allowed list`() {
-        val allowed = listOf("entity", "mapper")
+        val allowed = listOf("mapper")
 
         scope.packages
             .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.datasource\\.local\\.[^.]+$")) }
@@ -120,7 +120,7 @@ class PackageHierarchyTest {
     @Test
     fun `Leaf packages must not have child packages`() {
         val leafPackageNames =
-            setOf("api", "cache", "component", "di", "dto", "flow", "mapper", "model", "navigation", "repository", "usecase", "uimodel")
+            setOf("api", "component", "di", "dto", "mapper", "model", "navigation", "repository", "usecase", "uimodel")
 
         val allPackages = Konsist.scopeFromProject().packages
         val allPackageNames = allPackages.map { it.name }.toSet()

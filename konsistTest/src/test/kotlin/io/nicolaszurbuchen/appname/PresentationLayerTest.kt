@@ -86,7 +86,7 @@ class PresentationLayerTest {
 
     @Test
     fun `files in component packages must not use a screen file suffix`() {
-        val screenSuffixes = listOf("Contract", "Preview", "Route", "Screen", "ViewModel", "Flow")
+        val screenSuffixes = listOf("Contract", "Preview", "Route", "Screen", "ViewModel")
 
         scope.files
             .withPackage("..component..")

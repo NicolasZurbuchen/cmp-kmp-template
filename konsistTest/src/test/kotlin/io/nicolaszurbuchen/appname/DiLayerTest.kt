@@ -28,11 +28,22 @@ class DiLayerTest {
             .assertTrue { it.name.endsWith("Module") }
     }
 
+    /**
+     * **This could not fail as first written.** The filter selected only files already in a `di`
+     * package and then asserted they were in a `di` package — moving a Module out of its slice
+     * removed it from the filter rather than failing the rule.
+     *
+     * It now selects every `*Module.kt` under a `feature/` or `common/` slice, wherever it sits,
+     * and requires a `di` package. `app/` and `infra/` are out of scope on purpose: both keep
+     * their modules beside the code they wire, which is right for packages that have no slices to
+     * group by — `infra/network/NetworkModule.kt` beside `HttpClientFactory` says more than an
+     * `infra/di/` holding every module would.
+     */
     @Test
     fun `files suffixed with Module must reside in di package`() {
         scope.files
             .withNameEndingWith("Module")
-            .filter { it.hasPackage("..feature..di..") || it.hasPackage("..common..di..") }
+            .filter { it.hasPackage("..feature..") || it.hasPackage("..common..") }
             .assertTrue { it.hasPackage("..di..") }
     }
 
@@ -46,8 +57,9 @@ class DiLayerTest {
             .withPackage("..di..")
             .filter { it.hasPackage("..feature..di..") || it.hasPackage("..common..di..") }
             .assertTrue { file ->
-                if (file.hasPackage("..infra.di.app..")) return@assertTrue true
-
+                // The aggregator allowed to cross subtrees is `app/di/AppModule.kt`, which this
+                // filter never selected. The exclusion that used to sit here named `infra.di.app`,
+                // a package this template has never had.
                 val ownSubtree =
                     projectSubtree(file.packagee?.name)
                         ?: return@assertTrue true
@@ -63,9 +75,9 @@ class DiLayerTest {
 
     /**
      * The owning subtree of a project package:
-     *   <prefix>.feature.vault.di -> "feature.vault"
-     *   <prefix>.common.crypto.di -> "common.crypto"
-     *   <prefix>.infra.ui         -> "infra"
+     *   <prefix>.feature.pokemonexplorer.di -> "feature.pokemonexplorer"
+     *   <prefix>.common.error               -> "common.error"
+     *   <prefix>.infra.text                 -> "infra"
      * Returns null for external (non-project) packages.
      */
     private fun projectSubtree(qualifiedName: String?): String? {

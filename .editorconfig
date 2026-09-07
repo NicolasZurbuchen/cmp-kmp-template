@@ -27,6 +27,12 @@ compose_preview_naming_strategy = suffix
 # Compose — Route pattern (ViewModel forwarding is intentional in Routes)
 compose_allowed_forwarding = .*Route
 
+# Compose — past-tense completion callbacks (explicitly allowlisted)
+# compose_allowed_lambda_parameter_names = onAuthenticated
+
+# Compose — unstable collections (enable when ready to adopt ImmutableList)
+# compose_disallow_unstable_collections = true
+
 [**/build.gradle.kts]
 ktlint = disabled
 

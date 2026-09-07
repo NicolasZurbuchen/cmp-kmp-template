@@ -14,9 +14,6 @@ compose_allowed_composition_locals = LocalAppNameColors,LocalSpacing
 # Compose — enforce M3 only
 compose_disallow_material2 = true
 
-# Compose — past-tense completion callbacks (explicitly allowlisted)
-compose_allowed_lambda_parameter_names = onAuthenticated
-
 # Compose — Koin ViewModel factory
 compose_view_model_factories = koinViewModel
 
@@ -29,9 +26,6 @@ compose_preview_naming_strategy = suffix
 
 # Compose — Route pattern (ViewModel forwarding is intentional in Routes)
 compose_allowed_forwarding = .*Route
-
-# Compose — unstable collections (enable when ready to adopt ImmutableList)
-# compose_disallow_unstable_collections = true
 
 [**/build.gradle.kts]
 ktlint = disabled

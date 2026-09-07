@@ -39,7 +39,7 @@ Walk this list top to bottom. Stop at the first rule that matches the **primary 
 - **Gradle dependency version bump with no build-script structure change** → `build`, scope `deps`.
 - **Gradle version catalog / plugin structure change** → `build`, scope `gradle`.
 - **Koin module wiring change with no new bindable capability** → `refactor`, scope `di`. If it wires up a *new* feature's DI graph for the first time → `feat`, scope `di` (or the feature scope if the DI is feature-owned — see Step 2).
-- **Konsist rule addition or change** → `test`.
+- **Konsist rule addition or change** → `test`. Point a new rule at a real violation before committing it — see the last section of `agent-architecture-convention.md`.
 - **Cannot confidently place a diff in a single type** → split the commit into smaller commits until each one has an unambiguous type. Do not commit a mixed diff under a guessed type.
 
 ---
@@ -48,9 +48,9 @@ Walk this list top to bottom. Stop at the first rule that matches the **primary 
 
 Cross-cutting technical scopes take priority over feature scopes. Check in this order:
 
-1. **Does the change belong to one of the fixed cross-cutting scopes?** `sync`, `network`, `database`, `di`, `navigation`, `theme`, `gradle`, `deps` — these describe a technical concern, not a feature, and apply regardless of which feature triggered the work. Use these whenever the change's primary intent is the concern itself (e.g. "add retry policy to Ktor client" → `network`, even if it was needed for one feature).
+1. **Does the change belong to one of the fixed cross-cutting scopes?** `network`, `database`, `di`, `navigation`, `theme`, `gradle`, `deps` — these describe a technical concern, not a feature, and apply regardless of which feature triggered the work. Use these whenever the change's primary intent is the concern itself (e.g. "add retry policy to Ktor client" → `network`, even if it was needed for one feature).
 2. **Is the change confined to a single feature module, and not primarily about one of the concerns above?** Use that feature's scope (`feature-a`, `feature-b` — replace with this project's actual feature slugs, e.g. `dashboard`, `quiz`, `auth`). A change is feature-owned when the feature is where the change lives *and* the feature is the reason the change exists.
-3. **Does the change span two or more features with no single owner, and isn't one of the fixed technical scopes?** Use `common`.
+3. **Does the change span two or more features with no single owner, and isn't one of the fixed technical scopes?** Use `core`, which is also the package such code lives in.
 4. **CI-only or doc-only changes** — scope is optional; omit it unless a specific scope adds clarity (e.g. `ci(gradle): cache konsist test results`).
 
 ### Tie-breaker
@@ -69,4 +69,4 @@ These two cases genuinely depend on judgment this doc can't fully remove. When y
 
 ## Template scopes
 
-`feature-a` / `feature-b` in the enum are placeholders. On project setup, replace them with the actual feature module slugs for this repo and update both `commitlint.config.js`'s `scope-enum` and this file to match — they must never drift apart.
+`feature-a` / `feature-b` in the enum are placeholders. On project setup, replace them with the actual feature module slugs for this repo and update both `commitlint.config.js`'s `scope-enum` and this file to match — they must never drift apart. A CI job lints every commit message on a pull request, so a scope that exists in one file and not the other fails the build rather than passing quietly.

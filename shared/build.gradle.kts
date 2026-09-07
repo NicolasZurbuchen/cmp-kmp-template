@@ -110,6 +110,12 @@ sqldelight {
     databases {
         create("AppDatabase") {
             packageName.set("io.nicolaszurbuchen.appname.cache")
+
+            // Replays the migrations against the committed snapshot, which is the only thing that
+            // catches a table added with no .sqm. Regenerate it with
+            // :shared:generateCommonMainAppDatabaseSchema whenever a .sq file changes.
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
         }
     }
 }

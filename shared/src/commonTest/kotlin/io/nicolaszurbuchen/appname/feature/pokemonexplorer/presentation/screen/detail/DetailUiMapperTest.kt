@@ -4,7 +4,7 @@ import appname.shared.generated.resources.Res
 import appname.shared.generated.resources.pokemon_detail_height_label
 import appname.shared.generated.resources.pokemon_detail_weight_label
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.model.Pokemon
-import io.nicolaszurbuchen.appname.infra.ui.UiText
+import io.nicolaszurbuchen.appname.infra.text.UiText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

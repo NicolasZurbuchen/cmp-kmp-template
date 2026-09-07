@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.app.design.theme
+package io.nicolaszurbuchen.appname.design.theme
 
 import androidx.compose.ui.graphics.Color
 

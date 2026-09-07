@@ -12,20 +12,23 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import io.nicolaszurbuchen.appname.app.navigation.navConfig
+import androidx.savedstate.serialization.SavedStateConfiguration
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
 @Composable
-fun NavGraph(modifier: Modifier = Modifier) {
+fun NavGraph(
+    config: SavedStateConfiguration,
+    modifier: Modifier = Modifier,
+) {
     val navigator = koinInject<AppNavigator>()
     val initialRoute = koinInject<NavKey>(named("initialRoute"))
     val handlers = getKoin().getAll<NavKeyHandler>()
 
     val backStack =
         rememberNavBackStack(
-            navConfig,
+            config,
             initialRoute,
         )
 

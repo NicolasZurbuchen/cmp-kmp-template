@@ -27,7 +27,7 @@ module.exports = {
         'di',
         'navigation',
         'theme',
-        'common',
+        'core',
         'gradle',
         'deps',
         'feature-a',

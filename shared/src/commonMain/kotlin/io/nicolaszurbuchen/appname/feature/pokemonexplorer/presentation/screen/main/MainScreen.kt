@@ -26,7 +26,8 @@ import appname.shared.generated.resources.pokemon_main_clear_list
 import appname.shared.generated.resources.pokemon_main_empty_state
 import appname.shared.generated.resources.pokemon_main_fab_description
 import appname.shared.generated.resources.pokemon_main_history_title
-import io.nicolaszurbuchen.appname.app.design.component.AppErrorBanner
+import io.nicolaszurbuchen.appname.design.component.AppErrorBanner
+import io.nicolaszurbuchen.appname.design.theme.ShimmerPulse
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItem
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItemShimmer
 import org.jetbrains.compose.resources.stringResource
@@ -61,7 +62,7 @@ fun MainScreen(
             }
 
             if (state.isLoading && state.hero == null) {
-                PokemonListItemShimmer(isHero = true)
+                ShimmerPulse { PokemonListItemShimmer(isHero = true) }
             } else {
                 state.hero?.let { hero ->
                     PokemonListItem(
@@ -85,8 +86,10 @@ fun MainScreen(
 
             when {
                 state.isLoading && state.history.isEmpty() && state.hero == null -> {
-                    LazyColumn {
-                        items(3) { PokemonListItemShimmer() }
+                    ShimmerPulse {
+                        LazyColumn {
+                            items(SKELETON_ROWS) { PokemonListItemShimmer() }
+                        }
                     }
                 }
 
@@ -113,3 +116,7 @@ fun MainScreen(
         }
     }
 }
+
+// Enough to read as a list rather than as one stray row, and few enough that none of them is still
+// on screen when the real ones land on a short phone.
+private const val SKELETON_ROWS = 3

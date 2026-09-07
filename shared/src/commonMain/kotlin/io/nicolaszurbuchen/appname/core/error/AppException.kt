@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.common.error
+package io.nicolaszurbuchen.appname.core.error
 
 class AppException(
     val error: AppError,

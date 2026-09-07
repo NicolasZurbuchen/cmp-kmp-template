@@ -220,10 +220,10 @@ class DomainLayerTest {
                             if (fqn.startsWith(projectPackagePrefix)) {
                                 val isSameFeature =
                                     currentFeature != null && fqn.contains(".feature.$currentFeature.")
-                                val isCommon = fqn.contains(".common.")
+                                val isCore = fqn.contains(".core.")
                                 val isInfra = fqn.contains(".infra.")
 
-                                isSameFeature || isCommon || isInfra
+                                isSameFeature || isCore || isInfra
                             } else {
                                 true
                             }

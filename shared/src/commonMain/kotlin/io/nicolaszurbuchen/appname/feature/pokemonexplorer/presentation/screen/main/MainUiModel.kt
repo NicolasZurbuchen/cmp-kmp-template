@@ -1,6 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main
 
-import io.nicolaszurbuchen.appname.common.error.AppErrorUiModel
+import io.nicolaszurbuchen.appname.core.error.AppErrorUiModel
 
 data class MainUiModel(
     val isLoading: Boolean,

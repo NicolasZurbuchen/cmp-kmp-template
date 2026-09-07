@@ -26,9 +26,33 @@ class PackageHierarchyTest {
         val allowed = listOf("screen", "component", "navigation", "uimodel")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.presentation\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.feature\\.[^.]+\\.presentation\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
+                val segments = pkg.name.split(".feature.").last().split(".")
+                allowed.contains(segments.last())
+            }
+    }
+
+    /**
+     * **A `core/` slice is not a feature, so its `presentation/` is not shaped like one.**
+     *
+     * It has no `screen/`, because it has no screen, and no `navigation/`, because it owns no
+     * destination. What it has is rendering vocabulary several features draw — and a `mapper/`,
+     * because the domain crossing has to happen somewhere and a slice with no screens has no
+     * `screen/<name>/mapper/` to put it in.
+     *
+     * Splitting this from the feature rule rather than widening it is the point: most of what
+     * `konsistTest/` asserts about `presentation/` describes a screen, and a package that has none
+     * should be held to what it actually is instead of to the feature shape with holes in it.
+     */
+    @Test
+    fun `Direct children of a core slice presentation must be in allowed list`() {
+        val allowed = listOf("component", "uimodel", "mapper")
+
+        scope.packages
+            .filter { it.name.matches(Regex(".*\\.core\\.[^.]+\\.presentation\\.[^.]+$")) }
+            .assertTrue { pkg ->
+                val segments = pkg.name.split(".core.").last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -135,15 +159,44 @@ class PackageHierarchyTest {
             }
     }
 
+    /**
+     * **A file in a platform source set says so in its name.** `Platform.kt`, `Platform.android.kt`
+     * and `Platform.ios.kt` are three files a search returns together, and only the suffix tells you
+     * which one you are reading before you open it.
+     *
+     * It applies to every file in the source set, not only to `actual` declarations: a module with a
+     * twin per platform that is not an expect/actual pair is the same problem for a reader.
+     */
     @Test
-    fun `Screen name packages must not have child packages other than component`() {
+    fun `platform source set files must name their platform`() {
+        scope.files
+            .filter { it.resideInSourceSet("androidMain") }
+            .assertTrue { it.name.endsWith(".android") }
+
+        scope.files
+            .filter { it.resideInSourceSet("iosMain") }
+            .assertTrue { it.name.endsWith(".ios") }
+    }
+
+    /**
+     * Three, and each is a different kind of thing the screen owns: composables it reuses
+     * (`component`), the pieces of its vocabulary that are not the model itself (`uimodel`), and the
+     * domain-to-presentation converters (`mapper`). A screen package with no subfolders is still the
+     * common case — these appear when there is more than one of something.
+     */
+    @Test
+    fun `Screen name packages must not have child packages other than component, uimodel or mapper`() {
         scope.files
             .filter { file ->
                 file.packagee?.name?.contains(".presentation.screen.") == true
             }
             .assertTrue { file ->
                 file.packagee?.name
-                    ?.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.presentation\\.screen\\.[^.]+(\\.component)?$")) == true
+                    ?.matches(
+                        Regex(
+                            ".*\\.(feature|core)\\.[^.]+\\.presentation\\.screen\\.[^.]+(\\.(component|uimodel|mapper))?$",
+                        ),
+                    ) == true
             }
     }
 }

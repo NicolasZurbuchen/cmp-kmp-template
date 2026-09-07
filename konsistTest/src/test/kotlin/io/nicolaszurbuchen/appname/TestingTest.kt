@@ -25,6 +25,25 @@ class TestingTest {
             .assertTrue { it.hasCorrespondingTestFile() }
     }
 
+    /**
+     * **A UiModel file that only declares its type needs no test; one that declares a function
+     * does.** This is the category a suffix-driven coverage list misses: a top-level function in a
+     * `uimodel` package is none of Mapper, UseCase, UiMapper or StoreFactory, so it falls through
+     * every entry above.
+     *
+     * It is where rules about the subject quietly end up — a state derived from a clock, a priority
+     * between two labels — which is exactly the code worth pinning. The type-only files stay exempt
+     * on purpose: requiring a test for an enum is asking someone to assert it has its own entries.
+     */
+    @Test
+    fun `every uimodel file that declares a function has a corresponding test file`() {
+        scope.files
+            .withPackage("..uimodel")
+            .withSourceSet("commonMain")
+            .filter { it.functions(includeNested = false).isNotEmpty() }
+            .assertTrue { it.hasCorrespondingTestFile() }
+    }
+
     @Test
     fun `every RepositoryImpl file has a corresponding test file`() {
         scope.files

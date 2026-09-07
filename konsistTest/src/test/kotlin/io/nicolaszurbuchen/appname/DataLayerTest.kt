@@ -56,6 +56,17 @@ class DataLayerTest {
     }
 
     @Test
+    fun `classes in the remote dto package must be suffixed with Dto, nested ones included`() {
+        // A nested payload is as much a wire type as the envelope around it, and the suffix is what
+        // says so at the call site: `OrderDto.LineDto` cannot be mistaken for the domain's
+        // `Order.Line`, which is the pair most likely to be confused while mapping between the two.
+        // The file-level rule above only ever saw the top-level declaration.
+        scope.classes(includeNested = true)
+            .withPackage("..data.datasource.remote.dto")
+            .assertTrue { it.name.endsWith("Dto") }
+    }
+
+    @Test
     fun `files in remote api package must be suffixed with Api or ApiImpl`() {
         scope.files
             .withPackage("..data.datasource.remote.api")

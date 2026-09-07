@@ -38,9 +38,6 @@ The primary goal of this repository is **not the example app** — it is a livin
 shared/
 ├── app/
 │   ├── App.kt                       # Root Composable: theme + image loader + NavGraph
-│   ├── design/
-│   │   ├── component/               # App-wide reusable composables (e.g. AppErrorBanner)
-│   │   └── theme/                   # Design tokens, color palette, spacing, typography
 │   ├── di/
 │   │   ├── KoinInitializer.kt
 │   │   └── AppModule.kt             # Aggregates every feature/infra Koin module
@@ -48,9 +45,14 @@ shared/
 │       ├── impl/
 │       │   └── PokemonExplorerNavigatorImpl.kt
 │       ├── NavConfig.kt
-│       └── NavigationModule.kt
-├── common/                          # Cross-cutting concepts shared across features
+│       └── AppNavigationModule.kt
+├── core/                            # The domain, and the rendering of it
 │   └── error/                       # AppError / AppException, single throw-catch mechanism
+├── design/                          # Tokens, and components with purely presentational contracts
+│   ├── component/                   # App-wide reusable composables (e.g. AppErrorBanner)
+│   ├── preview/                     # AppNamePreview — the preview harness
+│   ├── theme/                       # Colour palette, spacing, typography, shapes, shimmer
+│   └── uimodel/                     # UiModels the design components take
 ├── feature/
 │   └── pokemonexplorer/
 │       ├── data/
@@ -76,30 +78,37 @@ shared/
 │               ├── main/
 │               │   ├── MainContract.kt        # Intent/Label/Action/Message/State
 │               │   ├── MainRoute.kt / MainScreen.kt
+│               │   ├── MainScreenPreview.kt   # One provider, one preview, light and dark
 │               │   ├── MainStoreFactory.kt    # Bootstrapper + Executor + nested internal ReducerImpl
 │               │   ├── MainUiMapper.kt / MainUiModel.kt / MainViewModel.kt
-│               │   └── component/             # Screen-local composables (PokemonListItem, shimmer)
-│               └── detail/                    # same shape as main/, no component/ subfolder needed
+│               │   └── component/             # Screen-local composables (PokemonListItem, skeleton)
+│               └── detail/                    # same shape as main/
 └── infra/
     ├── database/                     # SQLDelight driver setup (expect/actual)
     ├── mvi/                          # MVIKotlin base wiring (StoreFactory binding)
     ├── navigation/                   # AppNavigator, NavKeyHandler, NavGraph — feature-agnostic
     ├── network/                      # Ktor client configuration (expect/actual engine)
     ├── platform/                     # expect/actual platform utilities (BackHandler, Platform)
-    └── ui/                           # UiText — resource/raw/composite text abstraction
+    ├── preview/                      # PreviewThemes, PreviewUiMode — the multipreview annotation
+    └── text/                         # UiText — resource/raw/composite text abstraction
 androidApp/                           # Android application module (MainActivity, manifest)
 konsistTest/                          # Separate module, sibling of shared/, architecture + coverage enforcement tests
+.github/workflows/                    # Konsist, tests, ktlint, migration, iOS and Android builds, commit messages
 ```
 
 ---
 
 ## 🏛 Architecture Decisions
 
-Four top-level packages, each with a distinct responsibility: `app/` composes the whole application and is the only place allowed to know about more than one feature at once; `infra/` is reusable technical plumbing with zero domain or feature knowledge; `common/` holds domain concepts genuinely shared across features; `feature/` holds vertical feature slices, each owning its full data/domain/presentation stack and never reaching into another feature's internals.
+Five top-level packages, and the useful thing about them is that **every placement question can be answered by reading the file itself.** `app/` composes the whole application and is *terminal* — it imports everything and nothing imports it. `infra/` is reusable technical plumbing with zero domain or brand knowledge, and imports nothing else in the project. `design/` is the design system: tokens, plus components whose contracts are purely presentational. `core/` models the subject — the domain, and the rendering of it. `feature/` holds vertical slices, each owning its full data/domain/presentation stack and never reaching into another feature's internals.
+
+The dependency graph those five describe is acyclic and complete, and all of it is enforced: nothing imports `app/`, `design/` never meets the domain, `core/` never looks up at a feature or the shell, and no feature reaches sideways.
 
 Each feature follows Clean Architecture layering with an MVI presentation layer (MVIKotlin's Store/Executor/Reducer), a strict `State` (internal) vs. `UiModel` (what the Composable actually renders) split, Koin for dependency injection, Navigation 3 for routing, and a matching Konsist rule for nearly every convention mentioned above — this repo treats "documented but not enforced" as equivalent to "not true."
 
-For the full, precise rule set — the decision procedure for where a new file goes, the exact shape every layer and MVI file must take, DI/testing/error-handling conventions, and the Konsist gotchas worth knowing before touching an architecture test — see [`agents/agent-architecture-convention.md`](agents/agent-architecture-convention.md). It's written for an agent to follow deterministically, but it's the same document a new human contributor should read too.
+For the full, precise rule set — the decision procedure for where a new file goes, the exact shape every layer and MVI file must take, previews, loading states, DI/testing/error-handling conventions, and the Konsist gotchas worth knowing before touching an architecture test — see [`agents/agent-architecture-convention.md`](agents/agent-architecture-convention.md). It's written for an agent to follow deterministically, but it's the same document a new human contributor should read too.
+
+Prose has a routing rule of its own, in [`agents/agent-documentation-convention.md`](agents/agent-documentation-convention.md): a KDoc is a contract, a `//` explains a surprise in the *code*, and why the app is the way it is goes in [`DECISIONS.md`](DECISIONS.md) — even when the code it justifies is right there. That last file ships nearly empty; a fork adds its own decisions underneath the template's.
 
 ---
 
@@ -114,10 +123,10 @@ npm install
 **Format:** `<type>(<scope>): <description>`
 
 - **Types:** `feat`, `fix`, `refactor`, `build`, `chore`, `ci`, `docs`, `perf`, `style`, `test`, `revert`.
-- **Scopes:** `network`, `database`, `di`, `navigation`, `theme`, `common`, `gradle`, `deps`, `feature-a`, `feature-b`, `pokemon-explorer`.
+- **Scopes:** `network`, `database`, `di`, `navigation`, `theme`, `core`, `gradle`, `deps`, `feature-a`, `feature-b`, `pokemon-explorer`.
 - A scope is **required** for `feat`, `fix`, `refactor`, and `build`.
 
-Example: `feat(common): add new utility function`
+Example: `feat(core): add new utility function`
 
 > [!IMPORTANT]
 > `feature-a`, `feature-b`, and `pokemon-explorer` are all template/example scopes. Once you fork this project, remove them from `commitlint.config.js` and add scopes for your own feature(s) instead. See [CLAUDE.md](CLAUDE.md) for the full forking checklist — this scope list, `agents/agent-commit-convention.md`, and this README have drifted out of sync with each other before, so update all three together.

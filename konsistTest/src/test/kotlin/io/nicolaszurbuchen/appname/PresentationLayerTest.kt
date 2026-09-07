@@ -826,6 +826,27 @@ class PresentationLayerTest {
             .assertEmpty()
     }
 
+    /**
+     * **A screen waits as its own silhouette, not as a spinner.**
+     *
+     * A centred `CircularProgressIndicator` is the same picture on every screen in every app, and it
+     * says only "something is happening". A shimmer skeleton says what is about to arrive, in the
+     * shape it will arrive in, so the real content lands in a layout the eye has already settled on.
+     * `ShimmerPulse` and `Modifier.shimmerBlock` in `design/theme/` are the tools; the geometry
+     * belongs to the screen, because the geometry is the point.
+     *
+     * Checked on the import rather than on the call, so a screen that pulls the indicator in and
+     * hides it behind a branch is caught too.
+     */
+    @Test
+    fun `Screen files must not draw a spinner while they wait`() {
+        scope.files
+            .withNameEndingWith("Screen")
+            .withPackage("..presentation.screen..")
+            .filter { file -> file.hasImport { it.name.endsWith(".CircularProgressIndicator") } }
+            .assertEmpty()
+    }
+
     @Test
     fun `presentation layer must not import from data layer`() {
         scope.files

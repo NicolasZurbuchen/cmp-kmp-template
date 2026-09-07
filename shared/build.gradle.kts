@@ -110,6 +110,15 @@ sqldelight {
     databases {
         create("AppDatabase") {
             packageName.set("io.nicolaszurbuchen.appname.cache")
+
+            // Where the .db snapshot of the current schema is kept, and the check that replays the
+            // migrations against it. This is the only thing that catches a table added to a .sq file
+            // with no matching .sqm: SQLDelight takes the schema version from the migration files, so
+            // the app compiles, runs and tests green either way and only breaks on a device that
+            // already had the database. Regenerate the snapshot with
+            // :shared:generateCommonMainAppDatabaseSchema whenever a .sq file changes, and commit it.
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
         }
     }
 }

@@ -12,20 +12,31 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import io.nicolaszurbuchen.appname.app.navigation.navConfig
+import androidx.savedstate.serialization.SavedStateConfiguration
 import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
+/**
+ * The host every destination is drawn into.
+ *
+ * [config] is passed in rather than read from a package, and that is what keeps this file in
+ * `infra/`: the serializers module has to name every destination class, so it knows every feature,
+ * and a file that knows every feature belongs in the composition root. Importing it from here made
+ * the graph run `infra -> app`, which is the one direction `infra/` is defined by not taking.
+ */
 @Composable
-fun NavGraph(modifier: Modifier = Modifier) {
+fun NavGraph(
+    config: SavedStateConfiguration,
+    modifier: Modifier = Modifier,
+) {
     val navigator = koinInject<AppNavigator>()
     val initialRoute = koinInject<NavKey>(named("initialRoute"))
     val handlers = getKoin().getAll<NavKeyHandler>()
 
     val backStack =
         rememberNavBackStack(
-            navConfig,
+            config,
             initialRoute,
         )
 

@@ -6,6 +6,7 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import io.ktor.client.HttpClient
+import io.nicolaszurbuchen.appname.app.navigation.navConfig
 import io.nicolaszurbuchen.appname.design.theme.AppNameTheme
 import io.nicolaszurbuchen.appname.infra.navigation.NavGraph
 import org.koin.compose.koinInject
@@ -22,6 +23,6 @@ fun App() {
     }
 
     AppNameTheme {
-        NavGraph()
+        NavGraph(config = navConfig)
     }
 }

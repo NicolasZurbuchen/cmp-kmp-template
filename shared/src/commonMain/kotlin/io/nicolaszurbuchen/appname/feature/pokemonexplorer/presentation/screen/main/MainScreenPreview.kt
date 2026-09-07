@@ -10,11 +10,6 @@ import io.nicolaszurbuchen.appname.design.preview.AppNamePreview
 import io.nicolaszurbuchen.appname.infra.preview.PreviewThemes
 import io.nicolaszurbuchen.appname.infra.text.UiText
 
-/**
- * Every state this screen can reach, in the order it reaches them. Scrolling the preview pane walks
- * a cold start: nothing, then a first result, then a history, then a failed refresh over the
- * history it kept.
- */
 private class MainScreenStateProvider : PreviewParameterProvider<MainUiModel> {
     override val values =
         sequenceOf(

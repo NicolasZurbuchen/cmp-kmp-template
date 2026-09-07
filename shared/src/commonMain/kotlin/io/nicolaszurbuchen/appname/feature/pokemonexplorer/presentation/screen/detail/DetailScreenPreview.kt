@@ -7,10 +7,6 @@ import io.nicolaszurbuchen.appname.design.preview.AppNamePreview
 import io.nicolaszurbuchen.appname.infra.preview.PreviewThemes
 import io.nicolaszurbuchen.appname.infra.text.UiText
 
-/**
- * The skeleton, a loaded record, and the one nobody looks at until it happens: a row that resolved
- * to nothing, which this screen answers with a sentence rather than an empty page.
- */
 private class DetailScreenStateProvider : PreviewParameterProvider<DetailUiModel> {
     override val values =
         sequenceOf(

@@ -53,6 +53,22 @@ true without the file changing, and it cannot be answered by reading the file. T
 `core` says *put it here if it models the subject*. That question is answerable from the file alone,
 which is the property a placement rule needs.
 
+### A preview brings its own ground, and renders both themes from one body
+
+Compose's preview pane paints its own white behind whatever it renders. A screen that does not fill
+its background therefore looks correct in light mode and shows dark-theme text on a white sheet in
+dark mode — legible enough in the pane to pass a glance, and nothing like what the device does. The
+harness paints the background so the dark rendering is dark before a single component draws.
+
+The theme comes from the system flag rather than a `darkTheme` parameter: the tooling sets the ui
+mode, the theme reads `isSystemInDarkTheme()`, and the rendering is then the real dark theme rather
+than a preview-only override.
+
+**Rejected: one preview function per theme.** Two functions with identical bodies and one differing
+argument drift apart, and a preview that has drifted from its own dark twin still looks fine in
+review. A multipreview annotation renders both from one body, and a third rendering later — a large
+font scale, a small screen — is a change to the annotation rather than to every preview in the app.
+
 ### A screen waits as its own silhouette
 
 A centred spinner is the same picture on every screen in every app and says only that something is
@@ -66,6 +82,17 @@ geometry is the entire point. That is why `design/theme/Shimmer.kt` is a token a
 **Rejected: a travelling gradient highlight.** It needs a brush animated per frame across every
 placeholder, which is work spent on the one screen that is by definition waiting for something else.
 One alpha, provided once, animates a single value however many blocks read it.
+
+### The detail screen reads its record once, rather than observing it
+
+`DetailStoreFactory` does a one-shot read instead of collecting a `Flow`. Clearing the history from
+the main screen while the detail screen is open therefore leaves the record on screen stale rather
+than making it disappear underneath the reader.
+
+That is the accepted trade for the example feature, not an oversight. Observing would be the right
+call for a screen whose subject genuinely changes while it is open; here the alternative is a screen
+that empties itself in response to a gesture made somewhere else, which is worse for the reader and
+more machinery to demonstrate a pattern with.
 
 ### The Konsist task always runs
 

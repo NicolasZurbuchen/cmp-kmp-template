@@ -13,14 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.nicolaszurbuchen.appname.design.theme.shimmerBlock
 
-/**
- * The detail page's silhouette: the sprite, the number, the name, and the two facts under it — the
- * same five things in the same order and at the same sizes as the loaded screen.
- *
- * It is a file of its own rather than a private function at the bottom of `DetailScreen`, because a
- * skeleton is a second rendering of the same layout and the two drift apart the moment one of them
- * is easier to reach than the other.
- */
 @Composable
 fun DetailSkeleton(modifier: Modifier = Modifier) {
     Column(

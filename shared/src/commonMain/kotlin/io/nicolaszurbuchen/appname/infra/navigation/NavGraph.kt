@@ -17,14 +17,6 @@ import org.koin.compose.getKoin
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
-/**
- * The host every destination is drawn into.
- *
- * [config] is passed in rather than read from a package, and that is what keeps this file in
- * `infra/`: the serializers module has to name every destination class, so it knows every feature,
- * and a file that knows every feature belongs in the composition root. Importing it from here made
- * the graph run `infra -> app`, which is the one direction `infra/` is defined by not taking.
- */
 @Composable
 fun NavGraph(
     config: SavedStateConfiguration,

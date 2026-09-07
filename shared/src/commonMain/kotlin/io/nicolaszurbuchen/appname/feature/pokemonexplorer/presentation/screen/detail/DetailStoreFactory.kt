@@ -45,17 +45,12 @@ class DetailStoreFactory(
 
         private fun loadPokemon() {
             scope.launch {
-                // Intentionally a one-shot read, not Flow-observed: if the history is cleared
-                // (via Main's "Clear list") while this screen is open, the already-loaded
-                // Pokemon below simply goes stale instead of reacting live. That's an accepted
-                // tradeoff for this template, not an oversight.
                 val pokemon = getPokemonById(historyId)
                 dispatch(DetailMessage.PokemonLoaded(pokemon))
             }
         }
     }
 
-    // internal (not private) so DetailReducerTest can exercise it directly
     internal object ReducerImpl : Reducer<DetailState, DetailMessage> {
         override fun DetailState.reduce(msg: DetailMessage): DetailState =
             when (msg) {

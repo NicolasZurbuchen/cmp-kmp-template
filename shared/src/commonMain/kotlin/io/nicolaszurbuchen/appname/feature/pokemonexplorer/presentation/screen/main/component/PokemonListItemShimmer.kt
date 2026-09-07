@@ -15,13 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.nicolaszurbuchen.appname.design.theme.shimmerBlock
 
-/**
- * The row's own silhouette: a round sprite and two lines of text, at the sizes the real row uses.
- *
- * The geometry is the whole content of this file, which is why the animation is not — the pulse and
- * the block colour come from `design/theme/Shimmer.kt`, so every placeholder in the app breathes
- * together and nothing here has an opinion about how fast.
- */
 @Composable
 fun PokemonListItemShimmer(
     modifier: Modifier = Modifier,
@@ -60,8 +53,6 @@ private val LINE_GAP = 8.dp
 private val HERO_IMAGE_SIZE = 120.dp
 private val ROW_IMAGE_SIZE = 56.dp
 
-// The number sits above the name at the same size in both shapes — it is the one line that does not
-// grow with the hero, because "#001" is four characters either way.
 private val NUMBER_HEIGHT = 12.dp
 private val NUMBER_WIDTH = 48.dp
 

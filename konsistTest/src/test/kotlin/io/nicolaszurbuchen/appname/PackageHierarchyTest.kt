@@ -10,13 +10,13 @@ class PackageHierarchyTest {
     }
 
     @Test
-    fun `Direct children of feature or common must be in allowed list`() {
+    fun `Direct children of feature or core must be in allowed list`() {
         val allowed = listOf("presentation", "domain", "data", "di")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -26,9 +26,9 @@ class PackageHierarchyTest {
         val allowed = listOf("screen", "component", "navigation", "uimodel")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.presentation\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.presentation\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -38,9 +38,9 @@ class PackageHierarchyTest {
         val allowed = listOf("model", "repository", "usecase")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.domain\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.domain\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -50,9 +50,9 @@ class PackageHierarchyTest {
         val allowed = listOf("repository", "datasource")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.data\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -62,9 +62,9 @@ class PackageHierarchyTest {
         val allowed = listOf("remote", "local")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.datasource\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.data\\.datasource\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -74,9 +74,9 @@ class PackageHierarchyTest {
         val allowed = listOf("api", "dto", "mapper")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.datasource\\.remote\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.data\\.datasource\\.remote\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
@@ -86,16 +86,16 @@ class PackageHierarchyTest {
         val allowed = listOf("mapper")
 
         scope.packages
-            .filter { it.name.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.data\\.datasource\\.local\\.[^.]+$")) }
+            .filter { it.name.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.data\\.datasource\\.local\\.[^.]+$")) }
             .assertTrue { pkg ->
-                val segments = pkg.name.split(Regex("\\.(feature|common)\\.")).last().split(".")
+                val segments = pkg.name.split(Regex("\\.(feature|core)\\.")).last().split(".")
                 allowed.contains(segments.last())
             }
     }
 
     @Test
     fun `Top level packages must be in allowed list`() {
-        val allowed = listOf("app", "common", "feature", "infra")
+        val allowed = listOf("app", "core", "design", "feature", "infra")
 
         val allPackages = Konsist.scopeFromDirectory("shared/src/commonMain/kotlin").packages
         val allPackageNames = allPackages.map { it.name }
@@ -127,7 +127,7 @@ class PackageHierarchyTest {
 
         allPackages
             .filter { pkg ->
-                pkg.name.contains(Regex("\\.(feature|common)\\.")) &&
+                pkg.name.contains(Regex("\\.(feature|core)\\.")) &&
                     pkg.name.split(".").last() in leafPackageNames
             }
             .assertTrue { pkg ->
@@ -143,7 +143,7 @@ class PackageHierarchyTest {
             }
             .assertTrue { file ->
                 file.packagee?.name
-                    ?.matches(Regex(".*\\.(feature|common)\\.[^.]+\\.presentation\\.screen\\.[^.]+(\\.component)?$")) == true
+                    ?.matches(Regex(".*\\.(feature|core)\\.[^.]+\\.presentation\\.screen\\.[^.]+(\\.component)?$")) == true
             }
     }
 }

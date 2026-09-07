@@ -24,7 +24,7 @@ class DiLayerTest {
     fun `files in di package must be suffixed with Module`() {
         scope.files
             .withPackage("..di..")
-            .filter { it.hasPackage("..feature..di..") || it.hasPackage("..common..di..") }
+            .filter { it.hasPackage("..feature..di..") || it.hasPackage("..core..di..") }
             .assertTrue { it.name.endsWith("Module") }
     }
 
@@ -33,7 +33,7 @@ class DiLayerTest {
      * package and then asserted they were in a `di` package — moving a Module out of its slice
      * removed it from the filter rather than failing the rule.
      *
-     * It now selects every `*Module.kt` under a `feature/` or `common/` slice, wherever it sits,
+     * It now selects every `*Module.kt` under a `feature/` or `core/` slice, wherever it sits,
      * and requires a `di` package. `app/` and `infra/` are out of scope on purpose: both keep
      * their modules beside the code they wire, which is right for packages that have no slices to
      * group by — `infra/network/NetworkModule.kt` beside `HttpClientFactory` says more than an
@@ -43,7 +43,7 @@ class DiLayerTest {
     fun `files suffixed with Module must reside in di package`() {
         scope.files
             .withNameEndingWith("Module")
-            .filter { it.hasPackage("..feature..") || it.hasPackage("..common..") }
+            .filter { it.hasPackage("..feature..") || it.hasPackage("..core..") }
             .assertTrue { it.hasPackage("..di..") }
     }
 
@@ -55,7 +55,7 @@ class DiLayerTest {
     fun `di modules must only import from their own subtree`() {
         scope.files
             .withPackage("..di..")
-            .filter { it.hasPackage("..feature..di..") || it.hasPackage("..common..di..") }
+            .filter { it.hasPackage("..feature..di..") || it.hasPackage("..core..di..") }
             .assertTrue { file ->
                 // The aggregator allowed to cross subtrees is `app/di/AppModule.kt`, which this
                 // filter never selected. The exclusion that used to sit here named `infra.di.app`,
@@ -76,7 +76,7 @@ class DiLayerTest {
     /**
      * The owning subtree of a project package:
      *   <prefix>.feature.pokemonexplorer.di -> "feature.pokemonexplorer"
-     *   <prefix>.common.error               -> "common.error"
+     *   <prefix>.core.error               -> "core.error"
      *   <prefix>.infra.text                 -> "infra"
      * Returns null for external (non-project) packages.
      */
@@ -88,7 +88,7 @@ class DiLayerTest {
                 .trimStart('.')
                 .split('.')
         return when (segments.firstOrNull()) {
-            "feature", "common" -> segments.take(2).joinToString(".")
+            "feature", "core" -> segments.take(2).joinToString(".")
             "infra" -> "infra"
             else -> null
         }

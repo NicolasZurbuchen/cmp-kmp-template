@@ -3,8 +3,8 @@ package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.
 import app.cash.turbine.test
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import io.nicolaszurbuchen.appname.common.error.AppError
-import io.nicolaszurbuchen.appname.common.error.AppException
+import io.nicolaszurbuchen.appname.core.error.AppError
+import io.nicolaszurbuchen.appname.core.error.AppException
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.fake.FakePokemonExplorerRepository
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.model.Pokemon
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.usecase.ClearHistoryUseCase

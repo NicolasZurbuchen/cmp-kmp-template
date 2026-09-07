@@ -36,7 +36,7 @@ import appname.shared.generated.resources.Res
 import appname.shared.generated.resources.pokemon_detail_back
 import appname.shared.generated.resources.pokemon_detail_not_found
 import coil3.compose.AsyncImage
-import io.nicolaszurbuchen.appname.infra.ui.asString
+import io.nicolaszurbuchen.appname.infra.text.asString
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

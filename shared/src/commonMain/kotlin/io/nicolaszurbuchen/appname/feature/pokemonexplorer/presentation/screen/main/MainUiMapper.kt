@@ -1,6 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main
 
-import io.nicolaszurbuchen.appname.common.error.toUiModel
+import io.nicolaszurbuchen.appname.core.error.toUiModel
 
 fun MainState.toUiModel(): MainUiModel {
     val items =

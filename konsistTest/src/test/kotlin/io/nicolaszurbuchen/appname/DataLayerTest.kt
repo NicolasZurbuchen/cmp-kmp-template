@@ -493,10 +493,10 @@ class DataLayerTest {
                             // It's a project type
                             val isSameFeature =
                                 currentFeature != null && fqn.contains(".feature.$currentFeature.")
-                            val isCommon = fqn.contains(".common.")
+                            val isCore = fqn.contains(".core.")
                             val isInfra = fqn.contains(".infra.")
 
-                            isSameFeature || isCommon || isInfra
+                            isSameFeature || isCore || isInfra
                         } else {
                             // External type (e.g., Firebase, Kotlin, Java) - Allowed
                             true

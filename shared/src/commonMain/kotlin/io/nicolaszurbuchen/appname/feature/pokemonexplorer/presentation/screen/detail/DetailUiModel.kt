@@ -1,6 +1,6 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.detail
 
-import io.nicolaszurbuchen.appname.infra.ui.UiText
+import io.nicolaszurbuchen.appname.infra.text.UiText
 
 data class DetailUiModel(
     val isLoading: Boolean,

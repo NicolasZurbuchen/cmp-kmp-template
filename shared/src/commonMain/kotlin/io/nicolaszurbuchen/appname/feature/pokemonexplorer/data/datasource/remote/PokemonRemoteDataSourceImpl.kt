@@ -1,7 +1,7 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.data.datasource.remote
 
-import io.nicolaszurbuchen.appname.common.error.AppError
-import io.nicolaszurbuchen.appname.common.error.AppException
+import io.nicolaszurbuchen.appname.core.error.AppError
+import io.nicolaszurbuchen.appname.core.error.AppException
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.data.datasource.remote.api.PokemonApi
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.data.datasource.remote.dto.PokemonDto
 import kotlinx.coroutines.CancellationException

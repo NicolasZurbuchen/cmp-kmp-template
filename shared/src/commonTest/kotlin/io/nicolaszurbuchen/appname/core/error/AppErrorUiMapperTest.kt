@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.common.error
+package io.nicolaszurbuchen.appname.core.error
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ErrorOutline
@@ -18,7 +18,7 @@ import appname.shared.generated.resources.error_pokemon_fetch_failed_subtitle
 import appname.shared.generated.resources.error_pokemon_fetch_failed_title
 import appname.shared.generated.resources.error_unexpected_subtitle
 import appname.shared.generated.resources.error_unexpected_title
-import io.nicolaszurbuchen.appname.infra.ui.UiText
+import io.nicolaszurbuchen.appname.infra.text.UiText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

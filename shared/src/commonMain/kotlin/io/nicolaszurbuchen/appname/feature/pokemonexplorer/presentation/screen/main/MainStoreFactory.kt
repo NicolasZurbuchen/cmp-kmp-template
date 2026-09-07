@@ -5,8 +5,8 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.nicolaszurbuchen.appname.common.error.AppError
-import io.nicolaszurbuchen.appname.common.error.AppException
+import io.nicolaszurbuchen.appname.core.error.AppError
+import io.nicolaszurbuchen.appname.core.error.AppException
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.usecase.ClearHistoryUseCase
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.usecase.GetRandomPokemonUseCase
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.usecase.ObserveHistoryUseCase

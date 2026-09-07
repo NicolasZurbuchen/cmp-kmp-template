@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.app.design.component
+package io.nicolaszurbuchen.appname.design.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.dp
 import appname.shared.generated.resources.Res
 import appname.shared.generated.resources.error_dismiss
 import appname.shared.generated.resources.error_retry
-import io.nicolaszurbuchen.appname.app.design.theme.spacing
-import io.nicolaszurbuchen.appname.infra.ui.UiText
-import io.nicolaszurbuchen.appname.infra.ui.asString
+import io.nicolaszurbuchen.appname.design.theme.spacing
+import io.nicolaszurbuchen.appname.infra.text.UiText
+import io.nicolaszurbuchen.appname.infra.text.asString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

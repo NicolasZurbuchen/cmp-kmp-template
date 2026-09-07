@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.infra.ui
+package io.nicolaszurbuchen.appname.infra.text
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource

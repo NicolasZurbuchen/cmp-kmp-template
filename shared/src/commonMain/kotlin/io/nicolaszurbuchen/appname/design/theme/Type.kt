@@ -1,4 +1,4 @@
-package io.nicolaszurbuchen.appname.app.design.theme
+package io.nicolaszurbuchen.appname.design.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable

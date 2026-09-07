@@ -26,7 +26,7 @@ import appname.shared.generated.resources.pokemon_main_clear_list
 import appname.shared.generated.resources.pokemon_main_empty_state
 import appname.shared.generated.resources.pokemon_main_fab_description
 import appname.shared.generated.resources.pokemon_main_history_title
-import io.nicolaszurbuchen.appname.app.design.component.AppErrorBanner
+import io.nicolaszurbuchen.appname.design.component.AppErrorBanner
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItem
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main.component.PokemonListItemShimmer
 import org.jetbrains.compose.resources.stringResource

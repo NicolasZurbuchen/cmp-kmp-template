@@ -1,7 +1,7 @@
 package io.nicolaszurbuchen.appname.feature.pokemonexplorer.presentation.screen.main
 
-import io.nicolaszurbuchen.appname.common.error.AppError
-import io.nicolaszurbuchen.appname.common.error.toUiModel
+import io.nicolaszurbuchen.appname.core.error.AppError
+import io.nicolaszurbuchen.appname.core.error.toUiModel
 import io.nicolaszurbuchen.appname.feature.pokemonexplorer.domain.model.Pokemon
 import kotlin.test.Test
 import kotlin.test.assertEquals

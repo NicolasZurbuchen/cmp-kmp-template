@@ -1,6 +1,7 @@
 package io.nicolaszurbuchen.appname
 
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
 import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
 import com.lemonappdev.konsist.api.ext.list.withPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
@@ -22,6 +23,28 @@ class PresentationLayerTest {
                 "UiModel",
                 "ViewModel",
             )
+
+        /**
+         * Neither `app/` nor `design/` is a feature, and neither builds screens the way one does.
+         *
+         * `app/` is the shell: it owns the navigation host and any screen that sits outside the
+         * feature stacks — a splash gate is a composable and its preview, with no Contract, Store or
+         * UiModel to layer and no domain or data sibling to justify a `presentation/screen/` package
+         * around it.
+         *
+         * `design/` is the design system, and the one file it has that trips these rules is the
+         * preview *harness*, which is never drawn in a shipped screen. Where it must live is
+         * asserted positively by `PreviewTest`, so excusing it here loses nothing.
+         *
+         * Only `Screen` and `Preview` are excused. The four MVI files are not, because each one
+         * implies the whole apparatus: a shell screen that grows a Store needs the screen package
+         * the same way a feature does.
+         */
+        private fun List<KoFileDeclaration>.outsideFeatureScreens(): List<KoFileDeclaration> =
+            filterNot { it.hasPackage("..app..") || it.hasPackage("..design..") }
+
+        /** A screen's own subfolders. A file in one of these is not a screen file. */
+        private val screenSubpackages = listOf("component", "uimodel", "mapper")
     }
 
     // region Name implies location
@@ -44,6 +67,7 @@ class PresentationLayerTest {
     fun `files suffixed with Screen must reside in screen package`() {
         scope.files
             .withNameEndingWith("Screen")
+            .outsideFeatureScreens()
             .assertTrue { it.hasPackage("..presentation.screen..") }
     }
 
@@ -51,6 +75,7 @@ class PresentationLayerTest {
     fun `files suffixed with Preview must reside in screen package`() {
         scope.files
             .withNameEndingWith("Preview")
+            .outsideFeatureScreens()
             .assertTrue { it.hasPackage("..presentation.screen..") }
     }
 
@@ -76,7 +101,7 @@ class PresentationLayerTest {
     fun `files in screen packages must use an allowed suffix`() {
         scope.files
             .withPackage("..presentation.screen..")
-            .filter { file -> !file.hasPackage("..component..") }
+            .filter { file -> screenSubpackages.none { sub -> file.hasPackage("..$sub") } }
             .assertTrue { file -> screenFileSuffixes.any { suffix -> file.name.endsWith(suffix) } }
     }
 
@@ -152,7 +177,7 @@ class PresentationLayerTest {
         val screenPackages =
             scope.files
                 .withPackage("..presentation.screen..")
-                .filter { file -> !file.hasPackage("..component..") }
+                .filter { file -> screenSubpackages.none { sub -> file.hasPackage("..$sub") } }
                 .groupBy { it.packagee?.name }
 
         screenPackages.forEach { (packageName, files) ->
